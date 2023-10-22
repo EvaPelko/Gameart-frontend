@@ -12,11 +12,11 @@ Ovaj repozitorij je nastavak od [projekta za Programsko Inženjerstvo.](https://
 Grupa korisnika: svi ljubitelji umjetnosti i ljudi koji žele naučiti crtati<br />
 Ideja: Društvena mreža za umjetnike bazirana na edukaciji.<br />
 
-Sljedeće funkcionalnost sam uspješno implementirala u PI-u:<br />
+## Sljedeće funkcionalnost sam uspješno implementirala u PI-u:<br />
 U login page-u možete odabrati jeste li učenik ili učitelj. Korisnici mogu odabrati nickname, te će dobiti posebnu ikonu pokraj imena ako su učitelj. Učitelji imaju posebnu sekciju u kojoj samo učitelji mogu objavljivati svoje materijale (youtube link, step by step tutorijali, informativni tekstovi), dok studenti također imaju svoju sekciju gdje samo oni mogu objavljivati.<br />
 Društvena mreža je podijeljena na dvije sekcije: edukacijski dio i učenički dio. Edukacijski dio je namijenjen učiteljima. Učitelji i učenici mogu komentirati sve postove. <br />
 
-Sljedeće funkcionalnosti su nadogradnja i poboljšanje u sklopu kolegija Web aplikacije:<br />
+## Sljedeće funkcionalnosti su nadogradnja i poboljšanje u sklopu kolegija Web aplikacije:<br />
 
 Prijenos backenda s Firebase u MongoDB.<br />
 Prijava neprikladnih sadržaja je moguća od strane svih korisnika.<br />
