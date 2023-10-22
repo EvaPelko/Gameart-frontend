@@ -18,11 +18,17 @@ Društvena mreža je podijeljena na dvije sekcije: edukacijski dio i učenički 
 
 ### Sljedeće funkcionalnosti su nadogradnja i poboljšanje u sklopu kolegija Web aplikacije:
 Prijenos backenda s Firebase u MongoDB.<br />
-Prijava neprikladnih sadržaja je moguća od strane svih korisnika.<br />
 
 Dodatne moguće funkcionalnosti:<br />
 
-- svaki korisnik ima profil u kojem možete odabrati opciju za follow koja će vas obavjestiti svaki put kada ta osoba nešto objavi<br />
-- search funkcija u kojoj možete specificirati koju sekciju zelite pretražiti i razinu iskustva, te ključne riječi<br />
+- Svaki korisnik ima profil u kojem se može odabrati opcija za follow koja obavijesti followere kada taj korisnik nešto objavi, također profili sadrže sve objave koje je taj korisnik napravio. <br />
+- Ekspanzija teacher feed-a u različite dijelove koji su tematski relevantni, npr. sekcija za početnike, sekcija za anatomiju, za slikanje, itd...<br />
+- Napredna search funkcija u kojoj možete specificirati koju sekciju zelite pretražiti i razinu iskustva, te ključne riječi.<br />
+- Prijava neprikladnih sadržaja je moguća od strane svih korisnika.<br />
+- Chat i privatne poruke: korisnici imaju mogućnost za komunikaciju putem privatnih poruka i chatova. <br />
+- Mogućnost organiziranja virtualnih radionica i webinara. Učiteljima je omogućeno da interaktivno podučavaju korisnike uživo, koristeći video streaming i interakciju u stvarnom vremenu.<br />
+- Kalendar koji prikazuje raspored webinara, radionica, tečajeva i drugih događanja. To bi olakšalo korisnicima da prate i planiraju svoje aktivnosti.<br />
+- Mogućnost korisnicima da ostavljaju recenzije na profil učitelja.<br />
+- Sustav nagrada ili značka za aktivne korisnike koji sudjeluju u zajednici, ostavljaju komentare, lajkaju sadržaje i doprinose edukacijskim resursima.<br /> 
 
 ## Link na javni prototip
