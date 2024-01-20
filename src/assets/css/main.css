@@ -1,0 +1,145 @@
+@font-face {
+    font-family: "Atari Classic";
+    src: url('../atari-font/AtariClassic-gry3.ttf');
+    src: url('../atari-font/AtariClassic-gry3.ttf') format('ttf'),
+    
+  
+         
+  }
+
+.v-application {
+    font-family: "Atari classic", Helvetica, sans-serif !important;
+     .title { 
+        font-family: sans-serif !important;
+     }
+     background-color: #99CBDB !important;
+}
+p {
+   color: #3C2525;
+   text-align: center;
+   letter-spacing: -3px;
+}
+
+h1 {
+   color: #3C2525;
+   text-align: center;
+   letter-spacing: -1px;
+}
+h2 {
+   color: #3C2525;
+   text-align: center;
+   letter-spacing: -4px;
+}
+
+ #div-color {
+   background-color: #FFF7D0;
+ }
+
+ .stroke {
+  text-shadow:
+   -3px -3px 0 #ffffff,  
+    3px -3px 0 #ffffff,
+    -3px 3px 0 #ffffff,
+     3px 3px 0 #ffffff;
+ }
+ .stroke-mini {
+   text-shadow:
+    -1px -1px 0 #ffffff,  
+     1px -1px 0 #ffffff,
+     -1px 1px 0 #ffffff,
+      1px 1px 0 #ffffff;
+   
+      
+}
+.v-container{
+   padding: 525px;
+}
+
+.roboto-font {
+   font-family: 'Roboto', sans-serif;
+   letter-spacing: 0px;
+   font-size: 16px;
+}
+
+.responsive-image {
+   max-width: 100%;
+   height: auto;
+ }
+
+ .shrink-button {
+   width: 450px;
+   max-width: 100%; /* Ensure the button doesn't exceed its parent container */
+   flex: 1;
+
+   /* Responsive behavior at different breakpoints */
+   @media only screen and (max-width: 500px) {
+  
+     width: 350px;
+     
+   }
+ }
+
+ .shrink-img {
+   width: 320px;
+   max-width: 100%;
+   flex: 1;
+ }
+ 
+ @media only screen and (max-width: 500px) {
+   .shrink-img {
+     width: 100px;
+   }
+ }
+.transparent-sheet {
+   background-color: rgba(0, 0, 0, 0) !important;
+   border: none !important;
+   box-shadow: none !important;
+ }
+
+ .pixel-game-button {
+   border: none;          /* Remove the default border */
+   cursor: pointer;       /* Show pointer cursor on hover */
+   text-transform: uppercase; /* Optional: Convert text to uppercase */
+   transition: background-color 0.3s, color 0.3s; /* Add transitions for smooth hover effect */
+ 
+   /* Add any other styling you need */
+ }
+ 
+ .pixel-game-button:hover {
+   background-color: #ff5733; /* Change color on hover */
+   color: #000;               /* Change text color on hover */
+ }
+
+
+ .comment-input {
+   flex: 1;
+   max-width: 90%;
+ }
+
+ .icon-container {
+  background-color: #EBE2B4;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+}
+
+.icons-right {
+  display: flex;
+  gap: 40px;
+}
+
+.like-icon {
+  cursor: pointer;
+  transition: color 0.3s ease; /* Add smooth color transition */
+}
+
+.liked {
+  fill: red;
+}
+
+.post-input {
+  flex: 1;
+  max-width: 90%;
+  height: 70%;
+}
