@@ -31,7 +31,7 @@
 </template>
 
 <script>
-//import store from '../store';
+import store from '../store';
 //import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 
 export default {
@@ -39,9 +39,9 @@ export default {
   props: ['userEmail'],
   data() {
     return {
-      //store,
+      store,
       post: null,
-      //email: store.currentUser,
+      email: store.currentUser,
     }
   },
   components: {

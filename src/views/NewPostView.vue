@@ -31,10 +31,10 @@
 </template>
 
 <script>
-/* import store from '../store';
-import { auth, db, firebase } from "../firebase";
-import { doc, setDoc, addDoc, collection } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"; */
+import store from '../store';
+import { db } from "../firebase";
+import { addDoc, collection } from "firebase/firestore";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 export default {
   data() {
@@ -45,7 +45,7 @@ export default {
       newPostText: '',
       imageReference: null,
       valid: true,
-      //store,
+      store,
       rules: {
         required: v => !!v || "This field is required",
         maxLength: v => (v && v.length <= 1000) || "Max 1000 characters",
@@ -56,7 +56,7 @@ export default {
     checkScreenSize() {
       this.isSmallScreen = this.$vuetify.breakpoint.smAndDown; // Adjust breakpoint as needed
     },
-    /* post() {
+    post() {
       if (this.$refs.form.validate()) {
         this.imageReference.generateBlob((blobData) => {
           console.log(blobData);
@@ -67,6 +67,7 @@ export default {
           const storage = getStorage();
           const storageRef = ref(storage, imageName);
           uploadBytes(storageRef, blobData)
+            // eslint-disable-next-line
             .then((snapshot) => {
               alert('Uploaded a blob or file!');
               getDownloadURL(ref(storage, imageName))
@@ -119,7 +120,7 @@ export default {
             });
         });
       }
-    } */
+    }
   },
   mounted() {
     this.checkScreenSize();

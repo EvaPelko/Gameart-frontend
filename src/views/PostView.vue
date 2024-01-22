@@ -70,9 +70,9 @@
 </template>
 
 <script>
-/* import store from '../store';
-import { db, firebase } from "../firebase";
-import { getFirestore, doc, getDoc, addDoc, ref, collection, getDocs } from 'firebase/firestore'; */
+import store from '../store';
+//import { db, firebase } from "../firebase";
+import { getFirestore, doc, getDoc, addDoc, collection, getDocs } from 'firebase/firestore';
 import CommentCard from '../components/CommentCard'
 
 
@@ -106,7 +106,7 @@ export default {
   },
 
   methods: {
-    /* async postComment() {
+    async postComment() {
       if (this.newCommentText.trim() !== '') {
         console.log('Posting comment:', this.newCommentText);
 
@@ -138,8 +138,8 @@ export default {
         }
       }
 
-    }, */
-    /* async getComments() {
+    },
+    async getComments() {
       const cards = [];
       const db = getFirestore();
 
@@ -162,7 +162,7 @@ export default {
       cards.sort((a, b) => b.time - a.time);
 
       this.cards = cards;
-    }, */
+    },
     toggleLike() {
       this.isLiked = !this.isLiked;
     },
@@ -181,7 +181,7 @@ export default {
     showFullSize() {
       this.dialog = true;
     },
-    /* async fetchPostData(postId) {
+    async fetchPostData(postId) {
       try {
         const db = getFirestore()
         const postRef = doc(db, "teacher-posts", postId);
@@ -199,7 +199,7 @@ export default {
       } catch (error) {
         console.error('Error fetching post data: ', error)
       }
-    }, */
+    },
   },
 
 };

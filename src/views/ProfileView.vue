@@ -31,15 +31,15 @@
 </template>
 
 <script>
-
-//import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import store from '../store';
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 
 export default {
   name: 'ProfileView',
   props: ['userEmail'],
   data() {
     return {
-      //store,
+      store,
       post: null,
     }
   },
@@ -51,7 +51,7 @@ export default {
     await this.fetchUserData(this.userEmail);
   },
   methods: {
-    /* async fetchPostData(userEmail) {
+    async fetchPostData(userEmail) {
       try {
         const db = getFirestore()
         const usersCollection = collection(db, 'users'); // Replace 'users' with your collection name
@@ -69,7 +69,7 @@ export default {
       } catch (error) {
         console.error('Error fetching user data: ', error);
       }
-    }, */
+    },
   }
 }
 </script>

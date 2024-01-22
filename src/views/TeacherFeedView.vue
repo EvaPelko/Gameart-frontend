@@ -10,7 +10,7 @@
 <script>
 import store from '../store';
 import PostCard from '../components/PostCard'
-//import { collection, getDocs, db, getFirestore } from "firebase/firestore";
+import { collection, getDocs, getFirestore } from "firebase/firestore";
 export default {
   name: 'TeacherFeedView',
   data() {
@@ -23,7 +23,7 @@ export default {
     PostCard,
   },
   methods: {
-    /* async getPosts() {
+    async getPosts() {
       const cards = [];
       const db = getFirestore();
       const querySnapshot = await getDocs(collection(db, "teacher-posts"));
@@ -45,10 +45,10 @@ export default {
       cards.sort((a, b) => b.time - a.time);
 
       this.cards = cards;
-    }, */
+    },
   },
   mounted() {
-    /* this.getPosts(); */
+    this.getPosts();
   }
 }
 </script>
