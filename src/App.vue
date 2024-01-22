@@ -1,5 +1,6 @@
 <template>
   <v-app>
+
     <v-app-bar height=120 color="#FFF7D0">
       <v-container>
         <v-row>
@@ -32,7 +33,7 @@
 
 
 
-            <!-- <v-btn v-if="store.currentUser" text to="/newpost">New Post</v-btn>
+            <v-btn v-if="store.currentUser" text to="/newpost">New Post</v-btn>
             <v-btn v-if="store.currentUser" text to="/my-profile">
               Profile
             </v-btn>
@@ -40,7 +41,7 @@
             <v-btn v-if="!store.currentUser" text to="/registration">
               Registration
             </v-btn>
-            <v-btn v-if="store.currentUser" @click="logOut" text>Logout</v-btn> -->
+            <v-btn v-if="store.currentUser" @click="logOut" text>Logout</v-btn>
 
             <v-spacer></v-spacer>
           </v-col>
@@ -80,10 +81,7 @@
     </v-content>
   </v-app>
 </template>
-
 <style>
-@import 'vuetify/dist/vuetify.min.css';
-
 .v-app-bar-title__content {
   width: 300px !important;
   font-size: 1.5em;
@@ -92,11 +90,11 @@
 
 <script>
 import store from '../src/store';
-//import { getFirestore, doc, getDoc } from "firebase/firestore";
-//import { db, firebase } from "../src/firebase";
-//import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../src/firebase";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
-
+/* eslint-disable */
 export default {
   name: 'App',
   data() {
@@ -122,7 +120,7 @@ export default {
     };
   },
   created() {
-    //this.isLogged();
+    this.isLogged();
   },
   methods: {
     closeDropdownTeacher() {
@@ -136,7 +134,7 @@ export default {
       else if (link == 'About Us') return '/about';
       else if (link === 'Contact Us') return '/contact';
     },
-    /* async isLogged() {
+    async isLogged() {
       const auth = getAuth();
       onAuthStateChanged(auth, async (user) => {
         if (user) {
@@ -165,9 +163,8 @@ export default {
           store.profileType = null; // Reset profileType when logged out
         }
       });
-
-    }, */
-    /* logOut() {
+    },
+    logOut() {
       const auth = getAuth();
       signOut(auth).then(() => {
         alert('Logged out.');
@@ -175,10 +172,9 @@ export default {
       }).catch((error) => {
         alert(error);
       });
-    } */
+    }
   },
 
 
 };
 </script>
-
