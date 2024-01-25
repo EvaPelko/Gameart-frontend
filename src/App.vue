@@ -3,7 +3,7 @@
 
     <v-app-bar height=120 color="#FFF7D0">
       <v-container>
-        <v-row>
+        <v-row no-gutters>
           <v-col cols="auto">
             <div class="d-flex justify-start align-center">
 
@@ -12,6 +12,13 @@
                   transition="scale-transition" width="60" />
               </a>
               <v-app-bar-title class="stroke">GAMEART</v-app-bar-title>
+
+            </div>
+          </v-col>
+          <v-col></v-col>
+          <v-col class="ml-auto">
+            <div class="d-flex align-center mt-5">
+              <search-bar @updateSearch="handleSearch"></search-bar>
             </div>
           </v-col>
         </v-row>
@@ -90,13 +97,18 @@
 
 <script>
 import store from '../src/store';
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "../src/firebase";
+import SearchBar from './components/SearchBar.vue'
+//import { doc, getDoc } from "firebase/firestore";
+//import { db } from "../src/firebase";
+// eslint-disable-next-line
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 
 /* eslint-disable */
 export default {
   name: 'App',
+  components: {
+    SearchBar
+  },
   data() {
     return {
       drawer: false,
@@ -123,6 +135,10 @@ export default {
     this.isLogged();
   },
   methods: {
+    handleSearch(searchTerm) {
+      // Implement your search logic here
+      console.log('Search term:', searchTerm);
+    },
     closeDropdownTeacher() {
       this.openDropdownTeacher = false;
     },
@@ -134,7 +150,7 @@ export default {
       else if (link == 'About Us') return '/about';
       else if (link === 'Contact Us') return '/contact';
     },
-    async isLogged() {
+    /* async isLogged() {
       const auth = getAuth();
       onAuthStateChanged(auth, async (user) => {
         if (user) {
@@ -163,7 +179,7 @@ export default {
           store.profileType = null; // Reset profileType when logged out
         }
       });
-    },
+    }, */
     logOut() {
       const auth = getAuth();
       signOut(auth).then(() => {

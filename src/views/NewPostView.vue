@@ -17,6 +17,9 @@
 
             <croppa :width="400" :height="400" v-model="imageReference"></croppa>
 
+            <v-select label="Level of experience" v-model="experience"
+              :items="['Beginner', 'Intermediate', 'Advanced', 'Professional', 'Any']" variant="outlined"
+              :rules="[rules.required]"></v-select>
 
           </v-card-text>
           <v-card-actions class="card-actions">
@@ -43,6 +46,7 @@ export default {
       isSmallScreen: false,
       newTitleText: '',
       newPostText: '',
+      experience: '',
       imageReference: null,
       valid: true,
       store,
