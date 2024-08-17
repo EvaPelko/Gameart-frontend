@@ -19,6 +19,7 @@ Kolegij: [Web Aplikacije](https://fiputreca.notion.site/fiputreca/Web-aplikacije
 Mentor: [doc.dr.sc. Nikola Tanković](https://www.notion.so/Kontakt-stranica-875574d1b92248b1a8e90dae52cd29a9) <br />
 
 Ovaj repozitorij je nastavak od [projekta za Programsko Inženjerstvo.](https://github.com/EvaPelko/learnart)<br />
+Link na [Backend](https://github.com/EvaPelko/Gameart-backend).<br />
 
 ## Opis
 
