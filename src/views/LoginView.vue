@@ -56,6 +56,7 @@
 
 //import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, firebase } from "firebase/auth";
 import { Auth } from "@/services";
+import store from '../store';
 
 export default {
     name: "LoginView",
@@ -89,20 +90,31 @@ export default {
         };
     },
     methods: {
-        async login() {
+        async login(event) {
+    // Prevent the default form submission behavior
+    event.preventDefault();
+
+    console.log("running login func on frontend...");
+    try {
       let success = await Auth.login(this.email, this.password);
-      console.log("rezultat prijave ", success);
-        if (success && Auth.getToken()) {
-            alert('You have logged in.');
-            this.$router.push({ name: "landing" });
-        } else {
-          console.log("korisnik ne postoji!");
-          alert("User does not exist / password or email wrong");
-          setTimeout(() => {
-            this.email = "";
-            this.password = "";
-          }, 1000);
-        }},
+      console.log("Login result: ", success);
+      if (success && Auth.getToken()) {
+        alert('You have logged in.');
+        store.currentUser = this.email;
+        this.$router.replace("/landing"); // Redirect to landing or home page
+      } else {
+        console.log("User does not exist or wrong credentials!");
+        alert("User does not exist / wrong password or email");
+        /* setTimeout(() => {
+          this.email = "";
+          this.password = "";
+        }, 1000); */
+      }
+    } catch (e) {
+      console.error("Login error:", e);
+      alert("There was an error logging in. Please try again.");
+    }
+  },
         
         /* login() {
             console.log({ email: this.email })

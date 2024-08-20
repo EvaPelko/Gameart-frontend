@@ -143,13 +143,14 @@ export default {
       alert("You've successfully created your account and are now logged in.");
       this.$router.replace("/landing"); // Redirect to landing or home page
     } else {
-      alert("There was an error creating your account.");
+      alert("There was an error creating your account. The email might already be in use, please check your infromation.");
     }
   } catch (e) {
     console.error("Error during registration:", e);
     alert("There was an error creating your account.");
   }
 },
+
         /* async saveAdditionalData(user, email, firstName, lastName, profileType) {
             try {
                 await setDoc(doc(db, "users", email), {
