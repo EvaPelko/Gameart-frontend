@@ -66,6 +66,7 @@
 import { getFirestore, doc, setDoc } from 'firebase/firestore'; */
 // @ is an alias to /src
 import { Auth } from "@/services";
+import store from '../store';
 
 export default {
     name: "RegistrationView",
@@ -121,21 +122,29 @@ export default {
         async Register() {
   try {
     console.log("Running register method on db...");
-    console.log("Email:", this.email);
-    console.log("First Name:", this.firstName);
-    console.log("Last Name:", this.lastName);
-    console.log("Profile Type:", this.chosenProfileType);
-    console.log("Password:", this.password);
 
-    await Auth.Register({
+    const success = await Auth.Register({
       email: this.email,
       firstName: this.firstName,
       lastName: this.lastName,
       profileType: this.chosenProfileType,
       password: this.password
     });
-    alert("You've successfully created your account");
-    this.$router.replace("/landing");
+
+    if (success) {
+      // Update the store with current user information
+      store.currentUser = this.email;
+      store.profileType = this.chosenProfileType;
+
+     /*  // Store in localStorage for persistence (optional)
+      localStorage.setItem("currentUser", this.email);
+      localStorage.setItem("profileType", this.chosenProfileType); */
+
+      alert("You've successfully created your account and are now logged in.");
+      this.$router.replace("/landing"); // Redirect to landing or home page
+    } else {
+      alert("There was an error creating your account.");
+    }
   } catch (e) {
     console.error("Error during registration:", e);
     alert("There was an error creating your account.");

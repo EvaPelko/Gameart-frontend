@@ -107,7 +107,7 @@ let Users = {
   let Auth = {
     async login(email, password) {
       let response = await Service.post("/auth", {
-        email: email, // use lowercase keys here
+        email: email,
         password: password,
       });
       let user = response.data;
@@ -119,7 +119,7 @@ let Users = {
   
     async Register(userData) {
       let result = await Service.post("/users", {
-        email: userData.email,       // use lowercase keys here
+        email: userData.email,
         password: userData.password,
         firstName: userData.firstName,
         lastName: userData.lastName,

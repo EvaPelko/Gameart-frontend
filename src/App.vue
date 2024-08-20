@@ -191,6 +191,8 @@ export default {
         alert(error);
       }); */
       Auth.logout();
+      store.currentUser = null;
+      store.profileType = null;
       this.$router.push("/login");
     }
   },
