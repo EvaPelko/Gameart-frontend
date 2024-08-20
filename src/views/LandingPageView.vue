@@ -106,7 +106,7 @@ p {
 }
 </style>
 <script>
-
+import axios from 'axios';
 
 export default {
     name: 'LandingPageView',
@@ -121,6 +121,14 @@ export default {
             this.isSmallScreen = this.$vuetify.breakpoint.smAndDown;
         },
     },
+    async created() {
+  try {
+    const response = await axios.get('http://localhost:3000/users');
+    console.log('Users:', response.data);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+  }
+},
     mounted() {
         this.checkScreenSize();
         window.addEventListener('resize', this.checkScreenSize);

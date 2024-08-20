@@ -50,7 +50,7 @@
                         <v-btn class="btn-right-margin" @click="clearFormData" color="red darken-3" outlined>
                             CLEAR
                         </v-btn>
-                        <v-btn :disabled="isButtonDisabled" outlined type="button" @click="registerUser">
+                        <v-btn :disabled="isButtonDisabled" outlined type="button" @click="Register">
                             OK
                         </v-btn>
                     </v-card-actions>
@@ -64,6 +64,9 @@
 
 /* import { auth, db, firebase, createUserWithEmailAndPassword } from "../firebase";
 import { getFirestore, doc, setDoc } from 'firebase/firestore'; */
+// @ is an alias to /src
+import { Auth } from "@/services";
+
 export default {
     name: "RegistrationView",
     components: {},
@@ -115,6 +118,29 @@ export default {
             this.profileType = null;
 
         },
+        async Register() {
+  try {
+    console.log("Running register method on db...");
+    console.log("Email:", this.email);
+    console.log("First Name:", this.firstName);
+    console.log("Last Name:", this.lastName);
+    console.log("Profile Type:", this.chosenProfileType);
+    console.log("Password:", this.password);
+
+    await Auth.Register({
+      email: this.email,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      profileType: this.chosenProfileType,
+      password: this.password
+    });
+    alert("You've successfully created your account");
+    this.$router.replace("/landing");
+  } catch (e) {
+    console.error("Error during registration:", e);
+    alert("There was an error creating your account.");
+  }
+},
         /* async saveAdditionalData(user, email, firstName, lastName, profileType) {
             try {
                 await setDoc(doc(db, "users", email), {

@@ -1,8 +1,9 @@
 import axios from "axios";
 import $router from "@/router";
-let Service = axios.create({
-  baseURL: "https://gameart-8yye.onrender.com/",
-  timeout: 1000,
+
+const Service = axios.create({
+    baseURL: 'http://localhost:3000', // Your backend URL
+    timeout: 1000,
 });
 // Service.interceptors.request.use((request) => {
 //   let token = Auth.getToken();
@@ -103,57 +104,61 @@ let Users = {
     },
   };
 
-
-let Auth = {
-  async login(email, password) {
-    let response = await Service.post("/auth", {
-      Email: email,
-      Password: password,
-    });
-    let user = response.data;
-
-    localStorage.setItem("user", JSON.stringify(user));
-
-    return true;
-  },
-
-  async Register(email, password) {
-    let user = {
-      Email: email,
-      Password: password,
-
-      dm: [],
-    };
-    let result = await Service.post("/users", user);
-    console.log(result);
-    return result;
-  },
-  logout() {
-    localStorage.removeItem("user");
-  },
-  getUser() {
-    return JSON.parse(localStorage.getItem("user"));
-  },
-  getToken() {
-    let user = Auth.getUser();
-    if (user && user.token) {
-      return user.token;
-    } else {
-      return false;
-    }
-  },
-
-  authenticated() {
-    let user = Auth.getUser();
-    if (user && user.token) {
+  let Auth = {
+    async login(email, password) {
+      let response = await Service.post("/auth", {
+        email: email, // use lowercase keys here
+        password: password,
+      });
+      let user = response.data;
+  
+      localStorage.setItem("user", JSON.stringify(user));
+  
       return true;
-    }
-    return false;
-  },
-  state: {
-    get authenticated() {
-      return Auth.authenticated();
     },
-  },
-};
+  
+    async Register(userData) {
+      let result = await Service.post("/users", {
+        email: userData.email,       // use lowercase keys here
+        password: userData.password,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        profileType: userData.profileType,
+      });
+      console.log(result);
+      return result;
+    },
+  
+    logout() {
+      localStorage.removeItem("user");
+    },
+  
+    getUser() {
+      return JSON.parse(localStorage.getItem("user"));
+    },
+  
+    getToken() {
+      let user = Auth.getUser();
+      if (user && user.token) {
+        return user.token;
+      } else {
+        return false;
+      }
+    },
+  
+    authenticated() {
+      let user = Auth.getUser();
+      if (user && user.token) {
+        return true;
+      }
+      return false;
+    },
+  
+    state: {
+      get authenticated() {
+        return Auth.authenticated();
+      },
+    },
+  };
+  
 export { Service, Auth, Posts, Users, Comments };

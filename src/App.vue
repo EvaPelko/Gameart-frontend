@@ -101,7 +101,8 @@ import SearchBar from './components/SearchBar.vue'
 //import { doc, getDoc } from "firebase/firestore";
 //import { db } from "../src/firebase";
 // eslint-disable-next-line
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+//import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { Auth } from "@/services";
 
 /* eslint-disable */
 export default {
@@ -129,6 +130,7 @@ export default {
 
       ],
       store,
+      auth: Auth.state
     };
   },
   created() {
@@ -181,13 +183,15 @@ export default {
       });
     }, */
     logOut() {
-      const auth = getAuth();
+      /* const auth = getAuth();
       signOut(auth).then(() => {
         alert('Logged out.');
         this.$router.push("/login");
       }).catch((error) => {
         alert(error);
-      });
+      }); */
+      Auth.logout();
+      this.$router.push("/login");
     }
   },
 

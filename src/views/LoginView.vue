@@ -55,7 +55,7 @@
 <script>
 
 //import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, firebase } from "firebase/auth";
-
+import { Auth } from "@/services";
 
 export default {
     name: "LoginView",
@@ -89,6 +89,21 @@ export default {
         };
     },
     methods: {
+        async login() {
+      let success = await Auth.login(this.email, this.password);
+      console.log("rezultat prijave ", success);
+        if (success && Auth.getToken()) {
+            alert('You have logged in.');
+            this.$router.push({ name: "landing" });
+        } else {
+          console.log("korisnik ne postoji!");
+          alert("User does not exist / password or email wrong");
+          setTimeout(() => {
+            this.email = "";
+            this.password = "";
+          }, 1000);
+        }},
+        
         /* login() {
             console.log({ email: this.email })
 

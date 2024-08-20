@@ -8,6 +8,8 @@ import 'vuetify/dist/vuetify.min.css';
 import Croppa from 'vue-croppa';
 import './assets/css/main.css'
 import 'vue-croppa/dist/vue-croppa.css';
+import axios from 'axios';
+
 
 /* eslint-disable */
 
@@ -18,6 +20,7 @@ Vue.use(Vuetify);
 new Vue({
   router,
   Croppa,
+  axios,
   render: h => h(App),
   vuetify: new Vuetify(),
 }).$mount('#app');
