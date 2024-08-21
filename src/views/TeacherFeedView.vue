@@ -10,7 +10,9 @@
 <script>
 import store from '../store';
 import PostCard from '../components/PostCard'
-import { collection, getDocs, getFirestore } from "firebase/firestore";
+//import { collection, getDocs, getFirestore } from "firebase/firestore";
+import { Posts } from "@/services";
+
 export default {
   name: 'TeacherFeedView',
   data() {
@@ -24,6 +26,29 @@ export default {
   },
   methods: {
     async getPosts() {
+  try {
+    // Fetch posts from the backend using the Posts service
+    const teacherPosts = await Posts.GetTeacherFeed();
+    
+    // Map the posts data to the format expected by PostCard
+    const cards = teacherPosts.map(post => ({
+      id: post._id,
+      url: `http://localhost:3000${post.url}`, // Prepend the backend URL to the image path
+      time: post.posted_at,
+      email: post.email,
+      title: post.title,
+      text: post.text,
+    }));
+
+    // Sort the cards array by time property in descending order
+    cards.sort((a, b) => new Date(b.time) - new Date(a.time));
+
+    this.cards = cards;
+  } catch (error) {
+    console.error("Error fetching student posts:", error);
+  }
+},
+    /* async getPosts() {
       const cards = [];
       const db = getFirestore();
       const querySnapshot = await getDocs(collection(db, "teacher-posts"));
@@ -45,7 +70,7 @@ export default {
       cards.sort((a, b) => b.time - a.time);
 
       this.cards = cards;
-    },
+    }, */
   },
   mounted() {
     this.getPosts();
