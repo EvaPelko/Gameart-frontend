@@ -88,7 +88,15 @@ let Users = {
       let response = await Service.get("/teacher-feed");
       return response.data.feed;
     },
+
+    // Fetch a specific student post
+    async GetStudentPost(postId) {
+      let response = await Service.get(`/student-feed/${postId}`);
+      return response.data;
+    },
   };
+
+  
 
   let Comments = {
     // Fetch all comments

@@ -65,10 +65,11 @@
 </template>
 
 <script>
-import store from '../store';
+//import store from '../store';
 //import { db, firebase } from "../firebase";
-import { getFirestore, doc, getDoc, addDoc, collection, getDocs } from 'firebase/firestore';
+//import { getFirestore, doc, getDoc, addDoc, collection, getDocs } from 'firebase/firestore';
 import CommentCard from '../components/CommentCard'
+import { Posts, Comments } from "@/services";
 
 
 export default {
@@ -101,7 +102,29 @@ export default {
   },
 
   methods: {
-    async postComment() {
+    async fetchPostData(postId) {
+    try {
+      const response = await Posts.GetStudentPost(postId);
+      
+      // Prepend the backend URL to the image path
+      this.post = {
+        ...response,
+        url: `http://localhost:3000${response.url}`
+      };
+      
+    } catch (error) {
+      console.error("Error fetching post data:", error);
+    }
+  },
+  async getComments() {
+    try {
+      const response = await Comments.GetCommentsByPostId(this.postId);
+      this.cards = response;
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    }
+  },
+    /* async postComment() {
       if (this.newCommentText.trim() !== '') {
         console.log('Posting comment:', this.newCommentText);
 
@@ -133,8 +156,8 @@ export default {
         }
       }
 
-    },
-    async getComments() {
+    }, */
+    /* async getComments() {
       const cards = [];
       const db = getFirestore();
 
@@ -157,7 +180,7 @@ export default {
       cards.sort((a, b) => b.time - a.time);
 
       this.cards = cards;
-    },
+    }, */
     toggleLike() {
       this.isLiked = !this.isLiked;
     },
@@ -176,7 +199,7 @@ export default {
     showFullSize() {
       this.dialog = true;
     },
-    async fetchPostData(postId) {
+    /* async fetchPostData(postId) {
       try {
         const db = getFirestore()
         const postRef = doc(db, "student-posts", postId);
@@ -194,7 +217,7 @@ export default {
       } catch (error) {
         console.error('Error fetching post data: ', error)
       }
-    },
+    }, */
   },
 
 };
