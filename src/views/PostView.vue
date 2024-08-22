@@ -72,8 +72,9 @@
 <script>
 import store from '../store';
 //import { db, firebase } from "../firebase";
-import { getFirestore, doc, getDoc, addDoc, collection, getDocs } from 'firebase/firestore';
+//import { getFirestore, doc, getDoc, addDoc, collection, getDocs } from 'firebase/firestore';
 import CommentCard from '../components/CommentCard'
+import { Posts, Comments } from "@/services";
 
 
 export default {
@@ -106,7 +107,65 @@ export default {
   },
 
   methods: {
-    async postComment() {
+    async fetchPostData(postId) {
+    try {
+      const response = await Posts.GetTeacherPost(postId);
+      
+      // Prepend the backend URL to the image path
+      this.post = {
+        ...response,
+        url: `http://localhost:3000${response.url}`
+      };
+      
+    } catch (error) {
+      console.error("Error fetching post data:", error);
+    }
+  },
+  async getComments() {
+  try {
+    const response = await Comments.GetCommentsByPostId(this.postId);
+    
+    // Map the comments and ensure posted_at is correctly formatted
+    this.cards = response.map(comment => ({
+      id: comment._id,
+      text: comment.text,
+      email: comment.email,
+      time: comment.posted_at, // Ensure this is an ISO string
+    }));
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+  }
+},
+async postComment() {
+  // Check if the user is logged in by verifying that store.currentUser is not null
+  if (!store.currentUser) {
+        alert('You need to be logged in to post a comment.');
+        return;
+    }
+        if (this.newCommentText.trim() !== '') {
+            try {
+                const commentData = {
+                    text: this.newCommentText,
+                    email: store.currentUser, // Make sure `store.currentUser` is set to the current user's email
+                    postId: this.postId,
+                };
+
+                const response = await Comments.PostComment(commentData);
+                
+                if (response && response.message === 'Comment posted successfully') {
+                    alert('Comment posted');
+                    this.newCommentText = ''; // Clear the input after successful post
+                    this.getComments(); // Refresh the comments
+                } else {
+                    alert('There was an issue posting your comment.');
+                }
+            } catch (error) {
+                console.error('Error posting comment:', error);
+                alert('There was an error posting your comment.');
+            }
+        }
+    },
+    /* async postComment() {
       if (this.newCommentText.trim() !== '') {
         console.log('Posting comment:', this.newCommentText);
 
@@ -162,7 +221,7 @@ export default {
       cards.sort((a, b) => b.time - a.time);
 
       this.cards = cards;
-    },
+    }, */
     toggleLike() {
       this.isLiked = !this.isLiked;
     },
@@ -181,7 +240,7 @@ export default {
     showFullSize() {
       this.dialog = true;
     },
-    async fetchPostData(postId) {
+    /* async fetchPostData(postId) {
       try {
         const db = getFirestore()
         const postRef = doc(db, "teacher-posts", postId);
@@ -199,7 +258,7 @@ export default {
       } catch (error) {
         console.error('Error fetching post data: ', error)
       }
-    },
+    }, */
   },
 
 };

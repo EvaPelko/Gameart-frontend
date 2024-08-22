@@ -94,6 +94,12 @@ let Users = {
       let response = await Service.get(`/student-feed/${postId}`);
       return response.data;
     },
+
+    // Fetch a specific teacher post
+    async GetTeacherPost(postId) {
+      let response = await Service.get(`/teacher-feed/${postId}`);
+      return response.data;
+    },
   };
 
   
@@ -110,6 +116,11 @@ let Users = {
       let response = await Service.get(`/comments/${postId}`);
       return response.data.comments;
     },
+    // Post a new comment
+    async PostComment(commentData) {
+      let response = await Service.post("/comments", commentData);
+      return response.data;
+  }
   };
 
   let Auth = {
