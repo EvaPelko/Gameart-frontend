@@ -27,12 +27,21 @@
       </p>
       <br>
     </div>
+    <v-container>
+    <v-spacer></v-spacer>
+    <h1>Your posts</h1>
+    <PostCard v-for="card in cards" :key="card.id" :info="card" />
+
   </v-container>
+  </v-container>
+  
 </template>
 
 <script>
 import store from '../store';
 //import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import { Posts } from "@/services";
+import PostCard from '../components/PostCard'
 
 export default {
   name: 'MyProfileView',
@@ -42,11 +51,38 @@ export default {
       store,
       post: null,
       email: store.currentUser,
+      cards: [],
     }
   },
   components: {
-
+    PostCard,
   },
+  methods: {async fetchUserPosts() {
+      try {
+        // Fetch posts using the email of the logged-in user
+        const userPosts = await Posts.GetUserPosts(this.email);
+
+        // Map the posts data to the format expected by PostCard
+        this.cards = userPosts.map(post => ({
+          id: post._id,
+          url: `http://localhost:3000${post.url}`, // Prepend the backend URL to the image path
+          time: post.posted_at,
+          email: post.email,
+          title: post.title,
+          text: post.text,
+        }));
+
+        // Sort the cards array by time property in descending order
+        this.cards.sort((a, b) => new Date(b.time) - new Date(a.time));
+      } catch (error) {
+        console.error("Error fetching user posts:", error);
+      }
+    }
+  },
+  async created() {
+    // Fetch posts when the component is created
+    await this.fetchUserPosts();
+  }
 
 
 }

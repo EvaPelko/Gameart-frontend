@@ -111,6 +111,12 @@ let Users = {
       let response = await Service.get(`/teacher-feed/${postId}`);
       return response.data;
     },
+    
+    // Fetch all posts by a specific user
+    async GetUserPosts(email) {
+      let response = await Service.get(`/posts/user/${email}`);
+      return response.data; // This will return the array of posts
+  },
   };
 
   
