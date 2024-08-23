@@ -96,25 +96,27 @@ export default {
 
     console.log("running login func on frontend...");
     try {
-      let success = await Auth.login(this.email, this.password);
-      console.log("Login result: ", success);
-      if (success && Auth.getToken()) {
-        alert('You have logged in.');
-        store.currentUser = this.email;
-        this.$router.replace("/landing"); // Redirect to landing or home page
-      } else {
-        console.log("User does not exist or wrong credentials!");
-        alert("User does not exist / wrong password or email");
-        /* setTimeout(() => {
-          this.email = "";
-          this.password = "";
-        }, 1000); */
-      }
+        let success = await Auth.login(this.email, this.password);
+        console.log("Login result: ", success);
+        if (success && Auth.getToken()) {
+            alert('You have logged in.');
+            store.currentUser = this.email;
+            store.profileType = Auth.getUser().profileType; // Save userRole in store
+            this.$router.replace("/landing"); // Redirect to landing or home page
+        } else {
+            console.log("User does not exist or wrong credentials!");
+            alert("User does not exist / wrong password or email");
+            /* setTimeout(() => {
+              this.email = "";
+              this.password = "";
+            }, 1000); */
+        }
     } catch (e) {
-      console.error("Login error:", e);
-      alert("There was an error logging in. Please try again.");
+        console.error("Login error:", e);
+        alert("There was an error logging in. Please try again.");
     }
-  },
+},
+
         
         /* login() {
             console.log({ email: this.email })

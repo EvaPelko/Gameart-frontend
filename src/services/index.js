@@ -1,5 +1,6 @@
 import axios from "axios";
 import $router from "@/router";
+import store from '@/store';
 
 const Service = axios.create({
     baseURL: 'http://localhost:3000', // Your backend URL
@@ -60,22 +61,32 @@ let Users = {
 
   let Posts = {
     // Create a new post
-    async CreatePost(postData, imageFile) {
-      let formData = new FormData();
-      formData.append("title", postData.title);
-      formData.append("text", postData.text);
-      formData.append("email", postData.email);
-      formData.append("userRole", postData.userRole);
-      if (imageFile) {
-        formData.append("image", imageFile);
+    async CreatePost(postData, imageBlob) {
+      try {
+          let formData = new FormData();
+          formData.append("title", postData.title);
+          formData.append("text", postData.text);
+          formData.append("email", postData.email);
+          formData.append("userRole", postData.userRole);
+          
+          // Append the image with the expected field name
+          if (imageBlob) {
+              formData.append("image", imageBlob, "post_image.png");
+          }
+  
+          let response = await Service.post("/posts", formData, {
+              headers: {
+                  "Content-Type": "multipart/form-data",
+              },
+          });
+  
+          return response.data;
+      } catch (error) {
+          console.error('Error in CreatePost:', error.response || error.message || error);
+          throw error;
       }
-      let response = await Service.post("/posts", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      return response.data;
-    },
+  },
+   
   
     // Fetch student feed
     async GetStudentFeed() {
@@ -125,16 +136,40 @@ let Users = {
 
   let Auth = {
     async login(email, password) {
-      let response = await Service.post("/auth", {
-        email: email,
-        password: password,
-      });
-      let user = response.data;
-  
-      localStorage.setItem("user", JSON.stringify(user));
-  
-      return true;
-    },
+      try {
+          let response = await Service.post("/auth", {
+              email: email,
+              password: password,
+          });
+
+          // Log the entire response for debugging
+          console.log('Full response data:', response.data);
+
+          let user = response.data;
+
+          // Check if the token and other user details are present
+          if (user.token && user.email && user.profileType) {
+              // Store user details in local storage
+              localStorage.setItem("user", JSON.stringify(user));
+
+              // Store user data in the store
+              store.currentUser = user.email;
+              store.profileType = user.profileType;
+
+              // Log the stored data for debugging
+              console.log("Logged in user:", store.currentUser);
+              console.log("User role:", store.profileType);
+
+              return true;
+          } else {
+              console.error("Incomplete user data:", user);
+              return false;
+          }
+      } catch (error) {
+          console.error("Error during login:", error);
+          return false;
+      }
+  },
   
     async Register(userData) {
       let result = await Service.post("/users", {

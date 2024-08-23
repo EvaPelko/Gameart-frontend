@@ -35,9 +35,10 @@
 
 <script>
 import store from '../store';
-import { db } from "../firebase";
+/* import { db } from "../firebase";
 import { addDoc, collection } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"; */
+import { Posts } from "@/services";
 
 export default {
   data() {
@@ -60,7 +61,46 @@ export default {
     checkScreenSize() {
       this.isSmallScreen = this.$vuetify.breakpoint.smAndDown; // Adjust breakpoint as needed
     },
-    post() {
+    async post() {
+      console.log("running post...")
+        if (this.$refs.form.validate()) {
+            // Check if the user is logged in
+            if (!store.currentUser) {
+                alert('You need to be logged in to create a post.');
+                return;
+            }
+            console.log("user is logged in...")
+            // Convert the image to a Blob object and handle asynchronously
+            this.imageReference.generateBlob(async (blobData) => {
+                const postData = {
+                    title: this.newTitleText,
+                    text: this.newPostText,
+                    email: store.currentUser,
+                    userRole: store.profileType,
+                };
+                console.log('Blob data:', blobData);
+                console.log('Post data being sent:', postData);
+
+                try {
+                    const response = await Posts.CreatePost(postData, blobData);
+
+                    if (response && (response.message === 'Post saved to student-posts collection' ||
+                        response.message === 'Post saved to teacher-posts collection')) {
+                        alert('Post created successfully!');
+                        this.newTitleText = "";
+                        this.newPostText = "";
+                        this.imageReference.remove(); // Clear the image
+                        this.$router.push('/'); // Redirect to home or any other page after successful post
+                    } else {
+                        alert('There was an issue creating your post.');
+                    }
+                } catch (error) {
+                    console.error('Error creating post:', error);
+                    alert('There was an error creating your post.');
+                }
+            });
+        }}
+    /* post() {
       if (this.$refs.form.validate()) {
         this.imageReference.generateBlob((blobData) => {
           console.log(blobData);
@@ -124,7 +164,7 @@ export default {
             });
         });
       }
-    }
+    } */
   },
   mounted() {
     this.checkScreenSize();
