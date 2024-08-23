@@ -39,7 +39,6 @@
 
 <script>
 import store from '../store';
-//import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 import { Posts } from "@/services";
 import PostCard from '../components/PostCard'
 

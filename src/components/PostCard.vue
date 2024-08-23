@@ -31,6 +31,8 @@
 
 <script>
 import moment from 'moment';
+import store from '@/store';
+
 export default {
     name: 'PostCard',
 
@@ -46,13 +48,22 @@ export default {
             return moment(this.info.time).fromNow();
         },
         getCardLink() {
-            // Check the current route name and return the appropriate route name with parameters
-            if (this.$route.name === 'teacher-feed-view') {
+        // Check the current route name and return the appropriate route name with parameters
+        if (this.$route.name === 'teacher-feed-view') {
+            return { name: 'post-view', params: { postId: this.info.id } };
+        } else if (this.$route.name === 'student-feed-view') {
+            return { name: 'student-post-view', params: { postId: this.info.id } };
+        } else if (this.$route.name === 'my-profile-view') {
+            if (store.profileType === "Teacher") {
                 return { name: 'post-view', params: { postId: this.info.id } };
             } else {
                 return { name: 'student-post-view', params: { postId: this.info.id } };
             }
-        },
+        }
+
+        // Default return value in case none of the conditions match
+        return { name: 'default-route', params: { postId: this.info.id } };
+    },
     },
     methods: {
         checkScreenSize() {
