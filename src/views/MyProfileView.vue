@@ -4,9 +4,6 @@
     <h2>My profile</h2>
     <br>
     <div id="div-color">
-
-
-
       <div class="d-flex flex-row bg-surface-variant">
         <v-sheet class="ma-2  transparent-sheet">
           <v-avatar class="ma-4" size="50">

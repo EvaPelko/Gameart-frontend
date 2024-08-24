@@ -1,51 +1,77 @@
 <template>
   <v-container>
-    <br>
+    <br />
     <h2 class="stroke">{{ post.title }}</h2>
-    <br>
+    <br />
     <div id="div-color">
       <div class="d-flex flex-row bg-surface-variant">
-        <v-sheet class="ma-2 pa-2 transparent-sheet"><router-link
-            :to="{ name: 'profile-view', params: { userEmail: post.email } }">
+        <v-sheet class="ma-2 pa-2 transparent-sheet"
+          ><router-link
+            :to="{ name: 'profile-view', params: { userEmail: post.email } }"
+          >
             <v-avatar class="ma-4" size="50">
               <v-img src="../assets/User.jpg"></v-img>
-            </v-avatar>
-          </router-link></v-sheet>
-        <v-sheet class=" transparent-sheet">
+            </v-avatar> </router-link
+        ></v-sheet>
+        <v-sheet class="transparent-sheet">
           <p class="text-left mt-10">{{ post.email }}</p>
         </v-sheet>
-
       </div>
 
-      <p class="text-left roboto-font mx-10">{{ post.text }}
-      </p>
-      <v-img :src="post.url" alt="Responsive Image" class="mx-auto" max-width="320px" @click="showFullSize"></v-img>
+      <p class="text-left roboto-font mx-10">{{ post.text }}</p>
+      <v-img
+        :src="post.url"
+        alt="Responsive Image"
+        class="mx-auto"
+        max-width="320px"
+        @click="showFullSize"
+      ></v-img>
       <v-dialog v-model="dialog" max-width="800px">
         <v-img :src="post.url" contain></v-img>
       </v-dialog>
-      <br>
+      <br />
     </div>
     <div class="icon-container">
-      <v-img src="../assets/like.svg" alt="Like Icon" class="mx-2 like-icon" :class="{ liked: isLiked }" max-width="50px"
-        @click="toggleLike"></v-img>
+      <v-img
+        :src="likeImage"
+        alt="Like Icon"
+        class="mx-2 like-icon"
+        :class="{ liked: isLiked }"
+        max-width="50px"
+        @click="toggleLike"
+      ></v-img>
       <div class="icons-right">
-        <v-img src="../assets/report.svg" alt="Report button" class="mx-auto" max-width="40px"
-          @click="showReportMessage"></v-img>
+        <v-img
+          :src="reportImage"
+          alt="Report button"
+          class="mx-auto"
+          max-width="40px"
+          @click="showReportMessage"
+        ></v-img>
         <v-dialog v-model="reportDialog" max-width="300">
           <v-card>
             <v-card-title class="headline">Post Reported</v-card-title>
             <v-card-actions>
-              <v-btn color="primary" text @click="reportDialog = false">Close</v-btn>
+              <v-btn color="primary" text @click="reportDialog = false"
+                >Close</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-dialog>
-        <v-img src="../assets/save.svg" alt="Save button" class="mx-auto" max-width="28px"
-          @click="showSaveMessage"></v-img>
+        <v-img
+          :src="saveImage"
+          alt="Save button"
+          class="mx-auto"
+          max-width="28px"
+          @click="showSaveMessage"
+        ></v-img>
         <v-dialog v-model="saveDialog" max-width="300">
           <v-card>
             <v-card-title class="headline">Post Saved</v-card-title>
             <v-card-actions>
-              <v-btn color="primary" text @click="saveDialog = false">Close</v-btn>
+              <v-btn color="primary" text @click="saveDialog = false"
+                >Close</v-btn
+              >
             </v-card-actions>
           </v-card>
         </v-dialog>
@@ -54,10 +80,21 @@
     <div id="div-color" style="padding: 10px">
       <p>Comments</p>
       <div class="comment-container">
-        <v-textarea v-model="newCommentText" label="Write a comment..." outlined dense class="comment-input mx-15"
-          :rules="rules" counter @keyup.enter="postComment" rows="2"></v-textarea>
+        <v-textarea
+          v-model="newCommentText"
+          label="Write a comment..."
+          outlined
+          dense
+          class="comment-input mx-15"
+          :rules="rules"
+          counter
+          @keyup.enter="postComment"
+          rows="2"
+        ></v-textarea>
         <v-spacer></v-spacer>
-        <v-btn @click="postComment" color="#99CBDB" dark class="mx-15">Post</v-btn>
+        <v-btn @click="postComment" color="#99CBDB" dark class="mx-15"
+          >Post</v-btn
+        >
       </div>
     </div>
     <CommentCard v-for="card in cards" :key="card.id" :info="card" />
@@ -65,35 +102,37 @@
 </template>
 
 <script>
-import store from '../store';
-//import { db, firebase } from "../firebase";
-//import { getFirestore, doc, getDoc, addDoc, collection, getDocs } from 'firebase/firestore';
-import CommentCard from '../components/CommentCard'
+import store from "../store";
+import CommentCard from "../components/CommentCard";
 import { Posts, Comments } from "@/services";
 
-
 export default {
-  name: 'StudentPostView',
+  name: "StudentPostView",
   components: {
     CommentCard,
   },
-  props: ['postId'],
+  props: ["postId"],
   data() {
     return {
-      newCommentText: '',
+      newCommentText: "",
       isLiked: false,
       saveDialog: false,
       reportDialog: false,
-      imageUrl: '../assets/hand-drawing.jpg',
+      imageUrl: "../assets/hand-drawing.jpg",
       dialog: false,
       post: null,
       cards: [],
-      rules: [v => v.length <= 700 || 'Max 700 characters'],
+      rules: [(v) => v.length <= 700 || "Max 700 characters"],
+      userImage: require("@/assets/User.jpg"), // Load user image
+      checkImage: require("@/assets/check.svg"), // Load check icon
+      likeImage: require("@/assets/like.svg"), // Load like icon
+      reportImage: require("@/assets/report.svg"), // Load report icon
+      saveImage: require("@/assets/save.svg"), // Load save icon
     };
   },
   computed: {
     selectedPost() {
-      return this.posts.find(post => post.id === this.postId);
+      return this.posts.find((post) => post.id === this.postId);
     },
   },
   async mounted() {
@@ -103,120 +142,62 @@ export default {
 
   methods: {
     async fetchPostData(postId) {
-    try {
-      const response = await Posts.GetStudentPost(postId);
-      
-      // Prepend the backend URL to the image path
-      this.post = {
-        ...response,
-        url: `http://localhost:3000${response.url}`
-      };
-      
-    } catch (error) {
-      console.error("Error fetching post data:", error);
-    }
-  },
-  async getComments() {
-  try {
-    const response = await Comments.GetCommentsByPostId(this.postId);
-    
-    // Map the comments and ensure posted_at is correctly formatted
-    this.cards = response.map(comment => ({
-      id: comment._id,
-      text: comment.text,
-      email: comment.email,
-      time: comment.posted_at, // Ensure this is an ISO string
-    }));
-  } catch (error) {
-    console.error("Error fetching comments:", error);
-  }
-},
-async postComment() {
-  // Check if the user is logged in by verifying that store.currentUser is not null
-  if (!store.currentUser) {
-        alert('You need to be logged in to post a comment.');
-        return;
-    }
-        if (this.newCommentText.trim() !== '') {
-            try {
-                const commentData = {
-                    text: this.newCommentText,
-                    email: store.currentUser, // Make sure `store.currentUser` is set to the current user's email
-                    postId: this.postId,
-                };
+      try {
+        const response = await Posts.GetStudentPost(postId);
 
-                const response = await Comments.PostComment(commentData);
-                
-                if (response && response.message === 'Comment posted successfully') {
-                    alert('Comment posted');
-                    this.newCommentText = ''; // Clear the input after successful post
-                    this.getComments(); // Refresh the comments
-                } else {
-                    alert('There was an issue posting your comment.');
-                }
-            } catch (error) {
-                console.error('Error posting comment:', error);
-                alert('There was an error posting your comment.');
-            }
-        }
+        // Prepend the backend URL to the image path
+        this.post = {
+          ...response,
+          url: `http://localhost:3000${response.url}`,
+        };
+      } catch (error) {
+        console.error("Error fetching post data:", error);
+      }
     },
-    /* async postComment() {
-      if (this.newCommentText.trim() !== '') {
-        console.log('Posting comment:', this.newCommentText);
+    async getComments() {
+      try {
+        const response = await Comments.GetCommentsByPostId(this.postId);
 
-        const commentText = this.newCommentText;
-
+        // Map the comments and ensure posted_at is correctly formatted
+        this.cards = response.map((comment) => ({
+          id: comment._id,
+          text: comment.text,
+          email: comment.email,
+          time: comment.posted_at, // Ensure this is an ISO string
+        }));
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
+    },
+    async postComment() {
+      // Check if the user is logged in by verifying that store.currentUser is not null
+      if (!store.currentUser) {
+        alert("You need to be logged in to post a comment.");
+        return;
+      }
+      if (this.newCommentText.trim() !== "") {
         try {
-          const db = getFirestore();
-          const postRef = doc(db, "student-posts", this.postId);
-          const docSnap = await getDoc(postRef);
+          const commentData = {
+            text: this.newCommentText,
+            email: store.currentUser, // Make sure `store.currentUser` is set to the current user's email
+            postId: this.postId,
+          };
 
-          if (docSnap.exists()) {
-            const postId = docSnap.id; // Fetch the post ID from the document snapshot
-            const docRef = await addDoc(collection(db, "comments"), {
-              text: commentText,
-              posted_at: Date.now(),
-              email: store.currentUser,
-              postId: postId, // Use the fetched post ID
-            });
+          const response = await Comments.PostComment(commentData);
 
-            console.log("Comment posted ", docRef);
-            alert('Comment posted');
-            this.newCommentText = '';
+          if (response && response.message === "Comment posted successfully") {
+            alert("Comment posted");
+            this.newCommentText = ""; // Clear the input after successful post
+            this.getComments(); // Refresh the comments
           } else {
-            console.log("No such document!");
+            alert("There was an issue posting your comment.");
           }
         } catch (error) {
-          console.error(error);
-          alert(error);
+          console.error("Error posting comment:", error);
+          alert("There was an error posting your comment.");
         }
       }
-
-    }, */
-    /* async getComments() {
-      const cards = [];
-      const db = getFirestore();
-
-      const querySnapshot = await getDocs(collection(db, "comments"));
-      querySnapshot.forEach((doc) => {
-        console.log(doc.id, " => ", doc.data());
-        const data = doc.data();
-        if (data.postId === this.postId) {
-          const card = {
-            id: doc.id,
-            text: data.text,
-            email: data.email,
-            time: data.posted_at,
-          };
-          cards.push(card);
-        }
-      });
-
-      // Sort the cards array by time property in descending order
-      cards.sort((a, b) => b.time - a.time);
-
-      this.cards = cards;
-    }, */
+    },
     toggleLike() {
       this.isLiked = !this.isLiked;
     },
@@ -255,7 +236,5 @@ async postComment() {
       }
     }, */
   },
-
 };
-
 </script>
