@@ -84,7 +84,7 @@ navigateToPost() {
             // Only navigate if the delete button was not clicked
             if (this.$route.name === 'teacher-feed-view') {
                 this.$router.push({ name: 'post-view', params: { postId: this.info.id } });
-            } else if (this.$route.name === 'student-post-view') {
+            } else if (this.$route.name === 'student-feed-view') {
                 this.$router.push({ name: 'student-post-view', params: { postId: this.info.id } });
             } else if (this.$route.name === 'my-profile-view') {
                 if (store.profileType === "Teacher") {

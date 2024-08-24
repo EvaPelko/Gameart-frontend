@@ -1,18 +1,21 @@
 <template>
   <v-app>
-
-    <v-app-bar height=120 color="#FFF7D0">
+    <v-app-bar height="120" color="#FFF7D0">
       <v-container>
         <v-row no-gutters>
           <v-col cols="auto">
             <div class="d-flex justify-start align-center">
-
-              <a href="/landing"><v-img alt="Gameart Logo" class="shrink mr-2" contain
+              <a href="/landing"
+                ><v-img
+                  alt="Gameart Logo"
+                  class="shrink mr-2"
+                  contain
                   src="https://www.nicepng.com/png/full/171-1710349_game-controller-pixel-game-controller.png"
-                  transition="scale-transition" width="60" />
+                  transition="scale-transition"
+                  width="60"
+                />
               </a>
               <v-app-bar-title class="stroke">GAMEART</v-app-bar-title>
-
             </div>
           </v-col>
           <v-col></v-col>
@@ -27,18 +30,15 @@
           <v-col cols="auto">
             <v-btn text to="/landing">Landing</v-btn>
 
-            <v-btn text v-on="on" to="/teacherfeed">
-              Teacher Feed
+            <v-btn text v-on="on" to="/teacherfeed"> Teacher Feed </v-btn>
 
+            <v-btn
+              text
+              @click.stop="openDropdownStudent = !openDropdownStudent"
+              v-on="on"
+              to="/studentfeed"
+              >Student Feed
             </v-btn>
-
-
-            <v-btn text @click.stop="openDropdownStudent = !openDropdownStudent" v-on="on" to="/studentfeed">Student
-              Feed
-
-            </v-btn>
-
-
 
             <v-btn v-if="store.currentUser" text to="/newpost">New Post</v-btn>
             <v-btn v-if="store.currentUser" text to="/my-profile">
@@ -54,9 +54,7 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-col cols="auto">
-
-          </v-col>
+          <v-col cols="auto"> </v-col>
         </v-row>
       </v-container>
     </v-app-bar>
@@ -65,10 +63,12 @@
       <router-view />
     </v-main>
     <v-content>
-
-
-      <v-img src="./assets/Sprite-cat.png" align="right" width="200" class="ml-auto mb-15"></v-img>
-
+      <v-img
+        :src="spriteCatImage"
+        align="right"
+        width="200"
+        class="ml-auto mb-15"
+      ></v-img>
 
       <v-footer color="#EBE2B4" absolute>
         <v-row justify="center" no-gutters>
@@ -82,9 +82,6 @@
           </v-col>
         </v-row>
       </v-footer>
-
-
-
     </v-content>
   </v-app>
 </template>
@@ -96,8 +93,8 @@
 </style>
 
 <script>
-import store from '../src/store';
-import SearchBar from './components/SearchBar.vue'
+import store from "../src/store";
+import SearchBar from "./components/SearchBar.vue";
 //import { doc, getDoc } from "firebase/firestore";
 //import { db } from "../src/firebase";
 // eslint-disable-next-line
@@ -106,31 +103,29 @@ import { Auth } from "@/services";
 
 /* eslint-disable */
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    SearchBar
+    SearchBar,
   },
   data() {
     return {
+      spriteCatImage: require("@/assets/Sprite-cat.png"),
       drawer: false,
       openDropdown: false,
       dropdownItemsTeacher: [
-        { title: 'Fundamentals', route: '/post' },
-        { title: 'Anatomy', route: '/post' },
-        { title: 'Composition', route: '/post' },
+        { title: "Fundamentals", route: "/post" },
+        { title: "Anatomy", route: "/post" },
+        { title: "Composition", route: "/post" },
       ],
       dropdownItemsStudent: [
-        { title: 'Homework', route: '/post' },
-        { title: 'test', route: '/post' },
-        { title: 'again', route: '/post' },
+        { title: "Homework", route: "/post" },
+        { title: "test", route: "/post" },
+        { title: "again", route: "/post" },
       ],
 
-      links: [
-        'Home',
-
-      ],
+      links: ["Home"],
       store,
-      auth: Auth.state
+      auth: Auth.state,
     };
   },
   created() {
@@ -139,7 +134,7 @@ export default {
   methods: {
     handleSearch(searchTerm) {
       // Implement your search logic here
-      console.log('Search term:', searchTerm);
+      console.log("Search term:", searchTerm);
     },
     closeDropdownTeacher() {
       this.openDropdownTeacher = false;
@@ -148,9 +143,9 @@ export default {
       this.openDropdownStudent = false;
     },
     getRoute(link) {
-      if (link === 'Home') return '/landing';
-      else if (link == 'About Us') return '/about';
-      else if (link === 'Contact Us') return '/contact';
+      if (link === "Home") return "/landing";
+      else if (link == "About Us") return "/about";
+      else if (link === "Contact Us") return "/contact";
     },
     /* async isLogged() {
       const auth = getAuth();
@@ -194,9 +189,7 @@ export default {
       store.currentUser = null;
       store.profileType = null;
       this.$router.push("/login");
-    }
+    },
   },
-
-
 };
 </script>
