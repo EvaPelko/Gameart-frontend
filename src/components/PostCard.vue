@@ -1,5 +1,5 @@
 <template>
-    <v-card :to="getCardLink" exact tile height="350px" max-width="800" color="#EBE2B4" class="mx-auto my-12">
+    <v-card @click="navigateToPost" exact tile height="350px" max-width="800" color="#EBE2B4" class="mx-auto my-12">
         <div class="d-flex">
             <div>
 
@@ -24,6 +24,14 @@
                 </a>
                 <v-card-subtitle>{{ info.email }}</v-card-subtitle>
                 <v-card-subtitle>{{ postedFromNow }}</v-card-subtitle>
+                <!-- Delete Button -->
+        <v-btn v-if="isMyProfileView"
+          icon
+          @click.stop="deletePost"
+          style="position: absolute; top: 10px; right: 10px;" 
+        >
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
             </div>
         </div>
     </v-card>
@@ -32,6 +40,7 @@
 <script>
 import moment from 'moment';
 import store from '@/store';
+import { Posts } from "@/services";
 
 export default {
     name: 'PostCard',
@@ -47,27 +56,43 @@ export default {
         postedFromNow() {
             return moment(this.info.time).fromNow();
         },
-        getCardLink() {
-        // Check the current route name and return the appropriate route name with parameters
-        if (this.$route.name === 'teacher-feed-view') {
-            return { name: 'post-view', params: { postId: this.info.id } };
-        } else if (this.$route.name === 'student-feed-view') {
-            return { name: 'student-post-view', params: { postId: this.info.id } };
-        } else if (this.$route.name === 'my-profile-view') {
-            if (store.profileType === "Teacher") {
-                return { name: 'post-view', params: { postId: this.info.id } };
-            } else {
-                return { name: 'student-post-view', params: { postId: this.info.id } };
-            }
-        }
-
-        // Default return value in case none of the conditions match
-        return { name: 'default-route', params: { postId: this.info.id } };
+        
+    isMyProfileView() {
+      return this.$route.name === 'my-profile-view';
     },
     },
     methods: {
         checkScreenSize() {
             this.isSmallScreen = this.$vuetify.breakpoint.smAndDown;
+        },
+        async deletePost() {
+  try {
+    // Confirm deletion with the user
+    if (confirm("Are you sure you want to delete this post?")) {
+      // Send delete request to the backend
+      await Posts.DeletePost(this.info.id); // Make sure this.info.id is a valid ObjectId string
+
+      alert('Post deleted successfully');
+      this.$emit('delete-post', this.info.id); // Emit event after deletion
+    }
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    alert('Failed to delete post');
+  }
+},
+navigateToPost() {
+            // Only navigate if the delete button was not clicked
+            if (this.$route.name === 'teacher-feed-view') {
+                this.$router.push({ name: 'post-view', params: { postId: this.info.id } });
+            } else if (this.$route.name === 'student-post-view') {
+                this.$router.push({ name: 'student-post-view', params: { postId: this.info.id } });
+            } else if (this.$route.name === 'my-profile-view') {
+                if (store.profileType === "Teacher") {
+                    this.$router.push({ name: 'post-view', params: { postId: this.info.id } });
+                } else {
+                    this.$router.push({ name: 'student-post-view', params: { postId: this.info.id } });
+                }
+            }
         },
     },
     mounted() {

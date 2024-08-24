@@ -30,7 +30,7 @@
     <v-container>
     <v-spacer></v-spacer>
     <h1>Your posts</h1>
-    <PostCard v-for="card in cards" :key="card.id" :info="card" />
+    <PostCard v-for="card in cards" :key="card.id" :info="card" @delete-post="handleDeletePost"/>
 
   </v-container>
   </v-container>
@@ -75,6 +75,16 @@ export default {
         this.cards.sort((a, b) => new Date(b.time) - new Date(a.time));
       } catch (error) {
         console.error("Error fetching user posts:", error);
+      }
+    },
+    async handleDeletePost() {
+      try {
+        console.log("refreshing...")
+        // Refresh the list of posts after deletion
+        await this.fetchUserPosts();
+      } catch (error) {
+        console.error("Error refreshing posts:", error);
+        alert('Failed to refresh posts');
       }
     }
   },

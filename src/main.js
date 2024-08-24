@@ -9,7 +9,7 @@ import Croppa from 'vue-croppa';
 import './assets/css/main.css'
 import 'vue-croppa/dist/vue-croppa.css';
 import axios from 'axios';
-
+import '@mdi/font/css/materialdesignicons.css';
 
 /* eslint-disable */
 

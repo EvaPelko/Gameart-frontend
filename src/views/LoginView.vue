@@ -101,7 +101,6 @@ export default {
         if (success && Auth.getToken()) {
             alert('You have logged in.');
             store.currentUser = this.email;
-            store.profileType = Auth.getUser().profileType; // Save userRole in store
             this.$router.replace("/landing"); // Redirect to landing or home page
         } else {
             console.log("User does not exist or wrong credentials!");

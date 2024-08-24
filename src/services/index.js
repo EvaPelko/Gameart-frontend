@@ -86,6 +86,26 @@ let Users = {
           throw error;
       }
   },
+
+  async DeletePost(postId) {
+    if (store.profileType == "Student"){
+    try {
+      let response = await Service.delete(`/student-posts/${postId}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error during post deletion:", error);
+      throw error;
+    }
+  }else {
+    try {
+      let response = await Service.delete(`/teacher-posts/${postId}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error during post deletion:", error);
+      throw error;
+    }
+  }
+  },
    
   
     // Fetch student feed
