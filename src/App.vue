@@ -21,7 +21,11 @@
           <v-col></v-col>
           <v-col class="ml-auto">
             <div class="d-flex align-center mt-5">
-              <search-bar @updateSearch="handleSearch"></search-bar>
+              <!-- Conditionally render the search bar -->
+              <search-bar
+                v-if="showSearchBar"
+                @updateSearch="handleSearch"
+              ></search-bar>
             </div>
           </v-col>
         </v-row>
@@ -124,6 +128,15 @@ export default {
       auth: Auth.state,
       searchTerm: "",
     };
+  },
+  computed: {
+    showSearchBar() {
+      // Show the search bar only on student or teacher feed views
+      return (
+        this.$route.name === "student-feed-view" ||
+        this.$route.name === "teacher-feed-view"
+      );
+    },
   },
   created() {
     this.isLogged();
