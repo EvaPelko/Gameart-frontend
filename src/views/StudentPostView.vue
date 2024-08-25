@@ -49,18 +49,8 @@
           alt="Report button"
           class="mx-auto"
           max-width="40px"
-          @click="showReportMessage"
-        ></v-img>
-        <v-dialog v-model="reportDialog" max-width="300">
-          <v-card>
-            <v-card-title class="headline">Post Reported</v-card-title>
-            <v-card-actions>
-              <v-btn color="primary" text @click="reportDialog = false"
-                >Close</v-btn
-              >
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+          @click="reportPost"
+        />
         <v-img
           :src="saveImage"
           alt="Save button"
@@ -235,16 +225,40 @@ export default {
         alert("There was an error liking the post.");
       }
     },
+    async reportPost() {
+      // Check if the user is logged in by verifying that store.currentUser is not null
+      if (!store.currentUser) {
+        alert("You need to be logged in to report this post.");
+        return;
+      }
+
+      try {
+        const response = await Posts.ReportStudentPost(
+          this.post._id,
+          store.currentUser
+        );
+        if (response && response.message === "Post reported successfully") {
+          alert("Post has been reported.");
+          this.reportDialog = true;
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 400) {
+          const errorMessage = error.response.data.message;
+          if (errorMessage === "You have already reported this post.") {
+            alert("You have already reported this post.");
+          } else {
+            alert("There was an error reporting the post.");
+          }
+        } else {
+          console.error("Error reporting post:", error);
+          alert("There was an error reporting the post.");
+        }
+      }
+    },
     showSaveMessage() {
       this.saveDialog = true;
       setTimeout(() => {
         this.saveDialog = false;
-      }, 1000);
-    },
-    showReportMessage() {
-      this.reportDialog = true;
-      setTimeout(() => {
-        this.reportDialog = false;
       }, 1000);
     },
     showFullSize() {

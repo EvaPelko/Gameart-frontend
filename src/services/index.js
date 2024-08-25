@@ -151,6 +151,29 @@ let Users = {
         throw error;
     }
 },
+
+// Frontend service to report student post
+async ReportStudentPost(postId, userEmail) {
+  try {
+      const response = await axios.post(`http://localhost:3000/student-posts/${postId}/report`, { userEmail });
+      return response.data;
+  } catch (error) {
+      console.error("Error in ReportStudentPost:", error);
+      throw error;
+  }
+},
+
+// Frontend service to report teacher post
+async ReportTeacherPost(postId, userEmail) {
+  try {
+      const response = await axios.post(`http://localhost:3000/teacher-posts/${postId}/report`, { userEmail });
+      return response.data;
+  } catch (error) {
+      console.error("Error in ReportTeacherPost:", error);
+      throw error;
+  }
+},
+
     
     // Fetch all posts by a specific user
     async GetUserPosts(email) {
