@@ -168,7 +168,9 @@ export default {
 
         // Initialize likesCount and isLiked state
         this.likesCount = this.post.likes || 0;
-        this.isLiked = this.post.likedBy.includes(store.currentUser);
+        this.isLiked = this.post.likedBy
+          ? this.post.likedBy.includes(store.currentUser)
+          : false;
       } catch (error) {
         console.error("Error fetching post data:", error);
       }
