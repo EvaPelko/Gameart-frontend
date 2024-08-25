@@ -60,7 +60,7 @@
     </v-app-bar>
 
     <v-main>
-      <router-view />
+      <router-view :search-term="searchTerm" />
     </v-main>
     <v-content>
       <v-img
@@ -95,10 +95,6 @@
 <script>
 import store from "../src/store";
 import SearchBar from "./components/SearchBar.vue";
-//import { doc, getDoc } from "firebase/firestore";
-//import { db } from "../src/firebase";
-// eslint-disable-next-line
-//import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { Auth } from "@/services";
 
 /* eslint-disable */
@@ -126,15 +122,48 @@ export default {
       links: ["Home"],
       store,
       auth: Auth.state,
+      searchTerm: "",
     };
   },
   created() {
     this.isLogged();
   },
   methods: {
-    handleSearch(searchTerm) {
-      // Implement your search logic here
-      console.log("Search term:", searchTerm);
+    async handleSearch(searchTerm) {
+      // Save the search term to the state
+      this.searchTerm = searchTerm;
+
+      if (this.$route.name === "student-feed-view") {
+        // Search in student posts
+        try {
+          const response = await axios.get(
+            `http://localhost:3000/student-posts/search`,
+            {
+              params: { q: searchTerm },
+            }
+          );
+          this.searchResults = response.data;
+          this.$router.push({ name: "student-feed-view" }); // Ensure the view is updated
+        } catch (error) {
+          console.error("Error searching student posts:", error);
+        }
+      } else if (this.$route.name === "teacher-feed-view") {
+        // Search in teacher posts
+        try {
+          const response = await axios.get(
+            `http://localhost:3000/teacher-posts/search`,
+            {
+              params: { q: searchTerm },
+            }
+          );
+          this.searchResults = response.data;
+          this.$router.push({ name: "teacher-feed-view" }); // Ensure the view is updated
+        } catch (error) {
+          console.error("Error searching teacher posts:", error);
+        }
+      } else {
+        console.log("Search not applicable on this route");
+      }
     },
     closeDropdownTeacher() {
       this.openDropdownTeacher = false;
@@ -147,44 +176,7 @@ export default {
       else if (link == "About Us") return "/about";
       else if (link === "Contact Us") return "/contact";
     },
-    /* async isLogged() {
-      const auth = getAuth();
-      onAuthStateChanged(auth, async (user) => {
-        if (user) {
-          const uid = user.uid;
-          console.log('Logged in user');
-
-          // Fetch additional user data from Firestore based on email
-          try {
-            const docRef = doc(db, "users", user.email);
-            const docSnap = await getDoc(docRef);
-
-            if (docSnap.exists()) {
-              const userData = docSnap.data();
-              store.currentUser = user.email;
-              store.profileType = userData.ProfileType;
-              console.log('email: ', user.email, 'Type: ', userData.ProfileType);
-            } else {
-              console.log("No such document!");
-            }
-          } catch (error) {
-            console.error("Error fetching user data:", error);
-          }
-        } else {
-          console.log('Logged out user');
-          store.currentUser = null;
-          store.profileType = null; // Reset profileType when logged out
-        }
-      });
-    }, */
     logOut() {
-      /* const auth = getAuth();
-      signOut(auth).then(() => {
-        alert('Logged out.');
-        this.$router.push("/login");
-      }).catch((error) => {
-        alert(error);
-      }); */
       Auth.logout();
       store.currentUser = null;
       store.profileType = null;

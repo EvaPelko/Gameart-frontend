@@ -180,6 +180,26 @@ async ReportTeacherPost(postId, userEmail) {
       let response = await Service.get(`/posts/user/${email}`);
       return response.data; // This will return the array of posts
   },
+
+  async SearchStudentPosts(searchTerm) {
+    try {
+      const response = await axios.get(`/search/student-posts?q=${searchTerm}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error in SearchStudentPosts:", error);
+      throw error;
+    }
+  },
+
+  async SearchTeacherPosts(searchTerm) {
+    try {
+      const response = await axios.get(`/search/teacher-posts?q=${searchTerm}`);
+      return response.data;
+    } catch (error) {
+      console.error("Error in SearchTeacherPosts:", error);
+      throw error;
+    }
+  },
   };
 
   
