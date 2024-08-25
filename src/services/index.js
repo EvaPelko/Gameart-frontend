@@ -132,6 +132,26 @@ let Users = {
       return response.data;
     },
     
+    async LikeStudentPost(postId, userEmail) {
+      try {
+          const response = await axios.post(`http://localhost:3000/student-posts/${postId}/like`, { userEmail });
+          return response.data;
+      } catch (error) {
+          console.error("Error in LikeStudentPost:", error);
+          throw error;
+      }
+  },
+
+  async LikeTeacherPost(postId, userEmail) {
+    try {
+        const response = await axios.post(`http://localhost:3000/teacher-posts/${postId}/like`, { userEmail });
+        return response.data;
+    } catch (error) {
+        console.error("Error in LikeTeacherPost:", error);
+        throw error;
+    }
+},
+    
     // Fetch all posts by a specific user
     async GetUserPosts(email) {
       let response = await Service.get(`/posts/user/${email}`);

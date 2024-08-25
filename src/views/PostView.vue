@@ -43,14 +43,17 @@
       <br />
     </div>
     <div class="icon-container">
-      <v-img
-        :src="likeImage"
-        alt="Like Icon"
-        class="mx-2 like-icon"
-        :class="{ liked: isLiked }"
-        max-width="50px"
-        @click="toggleLike"
-      ></v-img>
+      <!-- Like Button -->
+      <div class="like-container" style="display: flex; align-items: center">
+        <v-icon
+          @click="toggleLike"
+          :color="isLiked ? 'red' : 'grey'"
+          max-width="70px"
+          style="cursor: pointer; width: 30px; height: 30px"
+          >mdi-heart</v-icon
+        >
+        <span>{{ likesCount }}</span>
+      </div>
       <div class="icons-right">
         <v-img
           :src="reportImage"
@@ -139,6 +142,7 @@ export default {
       likeImage: require("@/assets/like.svg"), // Load like icon
       reportImage: require("@/assets/report.svg"), // Load report icon
       saveImage: require("@/assets/save.svg"), // Load save icon
+      likesCount: 0, // track number of likes
     };
   },
   computed: {
@@ -161,6 +165,10 @@ export default {
           ...response,
           url: `http://localhost:3000${response.url}`,
         };
+
+        // Initialize likesCount and isLiked state
+        this.likesCount = this.post.likes || 0;
+        this.isLiked = this.post.likedBy.includes(store.currentUser);
       } catch (error) {
         console.error("Error fetching post data:", error);
       }
@@ -209,8 +217,32 @@ export default {
         }
       }
     },
-    toggleLike() {
-      this.isLiked = !this.isLiked;
+    async toggleLike() {
+      // Check if the user is logged in by verifying that store.currentUser is not null
+      if (!store.currentUser) {
+        alert("You need to be logged in to like this post.");
+        return;
+      }
+
+      // Prevent liking more than once
+      if (this.isLiked) {
+        alert("You have already liked this post.");
+        return;
+      }
+
+      try {
+        const response = await Posts.LikeTeacherPost(
+          this.post._id,
+          store.currentUser
+        );
+        if (response && response.message === "Post liked successfully") {
+          this.likesCount += 1;
+          this.isLiked = true;
+        }
+      } catch (error) {
+        console.error("Error liking post:", error);
+        alert("There was an error liking the post.");
+      }
     },
     showSaveMessage() {
       this.saveDialog = true;
