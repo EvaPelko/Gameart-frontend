@@ -3,10 +3,9 @@ import $router from "@/router";
 import store from '@/store';
 
 const Service = axios.create({
-    baseURL: 'http://localhost:3000', // Your backend URL
+    baseURL: 'https://gameart-backend-production.up.railway.app', // Backend URL
     timeout: 1000,
 });
-
 
 Service.interceptors.response.use(
   (response) => {
@@ -52,7 +51,7 @@ let Users = {
 
     async GetUserProfileType(email) {
       try {
-        const response = await axios.get(`http://localhost:3000/user/profile-type`, {
+        const response = await Service.get(`/user/profile-type`, {
           params: { email },
         });
         return response.data;
@@ -61,38 +60,38 @@ let Users = {
         throw error;
       }
     },
-  };
+};
 
-  let Posts = {
-    // Create a new post
-    async CreatePost(postData, imageBlob) {
-      try {
-          let formData = new FormData();
-          formData.append("title", postData.title);
-          formData.append("text", postData.text);
-          formData.append("email", postData.email);
-          formData.append("userRole", postData.userRole);
-          
-          // Append the image with the expected field name
-          if (imageBlob) {
-              formData.append("image", imageBlob, "post_image.png");
-          }
-  
-          let response = await Service.post("/posts", formData, {
-              headers: {
-                  "Content-Type": "multipart/form-data",
-              },
-          });
-  
-          return response.data;
-      } catch (error) {
-          console.error('Error in CreatePost:', error.response || error.message || error);
-          throw error;
-      }
-  },
+let Posts = {
+  // Create a new post
+  async CreatePost(postData, imageBlob) {
+    try {
+        let formData = new FormData();
+        formData.append("title", postData.title);
+        formData.append("text", postData.text);
+        formData.append("email", postData.email);
+        formData.append("userRole", postData.userRole);
+        
+        // Append the image with the expected field name
+        if (imageBlob) {
+            formData.append("image", imageBlob, "post_image.png");
+        }
 
-  async DeletePost(postId) {
-    if (store.profileType == "Student"){
+        let response = await Service.post("/posts", formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        console.error('Error in CreatePost:', error.response || error.message || error);
+        throw error;
+    }
+},
+
+async DeletePost(postId) {
+  if (store.profileType == "Student"){
     try {
       let response = await Service.delete(`/student-posts/${postId}`);
       return response.data;
@@ -100,7 +99,7 @@ let Users = {
       console.error("Error during post deletion:", error);
       throw error;
     }
-  }else {
+  } else {
     try {
       let response = await Service.delete(`/teacher-posts/${postId}`);
       return response.data;
@@ -109,57 +108,56 @@ let Users = {
       throw error;
     }
   }
-  },
-   
-  
-    // Fetch student feed
-    async GetStudentFeed() {
-      let response = await Service.get("/student-feed");
-      return response.data.feed;
-    },
-  
-    // Fetch teacher feed
-    async GetTeacherFeed() {
-      let response = await Service.get("/teacher-feed");
-      return response.data.feed;
-    },
+},
 
-    // Fetch a specific student post
-    async GetStudentPost(postId) {
-      let response = await Service.get(`/student-feed/${postId}`);
+// Fetch student feed
+async GetStudentFeed() {
+  let response = await Service.get("/student-feed");
+  return response.data.feed;
+},
+
+// Fetch teacher feed
+async GetTeacherFeed() {
+  let response = await Service.get("/teacher-feed");
+  return response.data.feed;
+},
+
+// Fetch a specific student post
+async GetStudentPost(postId) {
+  let response = await Service.get(`/student-feed/${postId}`);
+  return response.data;
+},
+
+// Fetch a specific teacher post
+async GetTeacherPost(postId) {
+  let response = await Service.get(`/teacher-feed/${postId}`);
+  return response.data;
+},
+
+async LikeStudentPost(postId, userEmail) {
+  try {
+      const response = await Service.post(`/student-posts/${postId}/like`, { userEmail });
       return response.data;
-    },
+  } catch (error) {
+      console.error("Error in LikeStudentPost:", error);
+      throw error;
+  }
+},
 
-    // Fetch a specific teacher post
-    async GetTeacherPost(postId) {
-      let response = await Service.get(`/teacher-feed/${postId}`);
+async LikeTeacherPost(postId, userEmail) {
+  try {
+      const response = await Service.post(`/teacher-posts/${postId}/like`, { userEmail });
       return response.data;
-    },
-    
-    async LikeStudentPost(postId, userEmail) {
-      try {
-          const response = await axios.post(`http://localhost:3000/student-posts/${postId}/like`, { userEmail });
-          return response.data;
-      } catch (error) {
-          console.error("Error in LikeStudentPost:", error);
-          throw error;
-      }
-  },
-
-  async LikeTeacherPost(postId, userEmail) {
-    try {
-        const response = await axios.post(`http://localhost:3000/teacher-posts/${postId}/like`, { userEmail });
-        return response.data;
-    } catch (error) {
-        console.error("Error in LikeTeacherPost:", error);
-        throw error;
-    }
+  } catch (error) {
+      console.error("Error in LikeTeacherPost:", error);
+      throw error;
+  }
 },
 
 // Frontend service to report student post
 async ReportStudentPost(postId, userEmail) {
   try {
-      const response = await axios.post(`http://localhost:3000/student-posts/${postId}/report`, { userEmail });
+      const response = await Service.post(`/student-posts/${postId}/report`, { userEmail });
       return response.data;
   } catch (error) {
       console.error("Error in ReportStudentPost:", error);
@@ -170,7 +168,7 @@ async ReportStudentPost(postId, userEmail) {
 // Frontend service to report teacher post
 async ReportTeacherPost(postId, userEmail) {
   try {
-      const response = await axios.post(`http://localhost:3000/teacher-posts/${postId}/report`, { userEmail });
+      const response = await Service.post(`/teacher-posts/${postId}/report`, { userEmail });
       return response.data;
   } catch (error) {
       console.error("Error in ReportTeacherPost:", error);
@@ -178,134 +176,131 @@ async ReportTeacherPost(postId, userEmail) {
   }
 },
 
-    
-    // Fetch all posts by a specific user
-    async GetUserPosts(email) {
-      let response = await Service.get(`/posts/user/${email}`);
-      return response.data; // This will return the array of posts
-  },
+// Fetch all posts by a specific user
+async GetUserPosts(email) {
+  let response = await Service.get(`/posts/user/${email}`);
+  return response.data; // This will return the array of posts
+},
 
-  async SearchStudentPosts(searchTerm) {
-    try {
-      const response = await axios.get(`/search/student-posts?q=${searchTerm}`);
-      return response.data;
-    } catch (error) {
-      console.error("Error in SearchStudentPosts:", error);
-      throw error;
-    }
-  },
-
-  async SearchTeacherPosts(searchTerm) {
-    try {
-      const response = await axios.get(`/search/teacher-posts?q=${searchTerm}`);
-      return response.data;
-    } catch (error) {
-      console.error("Error in SearchTeacherPosts:", error);
-      throw error;
-    }
-  },
-  };
-
-  
-
-  let Comments = {
-    // Fetch all comments
-    async GetAllComments() {
-      let response = await Service.get("/comments");
-      return response.data.feed;
-    },
-  
-    // Fetch comments for a specific post by postId
-    async GetCommentsByPostId(postId) {
-      let response = await Service.get(`/comments/${postId}`);
-      return response.data.comments;
-    },
-    // Post a new comment
-    async PostComment(commentData) {
-      let response = await Service.post("/comments", commentData);
-      return response.data;
+async SearchStudentPosts(searchTerm) {
+  try {
+    const response = await Service.get(`/search/student-posts?q=${searchTerm}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error in SearchStudentPosts:", error);
+    throw error;
   }
-  };
+},
 
-  let Auth = {
-    async login(email, password) {
-      try {
-          let response = await Service.post("/auth", {
-              email: email,
-              password: password,
-          });
+async SearchTeacherPosts(searchTerm) {
+  try {
+    const response = await Service.get(`/search/teacher-posts?q=${searchTerm}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error in SearchTeacherPosts:", error);
+    throw error;
+  }
+},
+};
 
-          // Log the entire response for debugging
-          console.log('Full response data:', response.data);
-
-          let user = response.data;
-
-          // Check if the token and other user details are present
-          if (user.token && user.email && user.profileType) {
-              // Store user details in local storage
-              localStorage.setItem("user", JSON.stringify(user));
-
-              // Store user data in the store
-              store.currentUser = user.email;
-              store.profileType = user.profileType;
-
-              // Log the stored data for debugging
-              console.log("Logged in user:", store.currentUser);
-              console.log("User role:", store.profileType);
-
-              return true;
-          } else {
-              console.error("Incomplete user data:", user);
-              return false;
-          }
-      } catch (error) {
-          console.error("Error during login:", error);
-          return false;
-      }
+let Comments = {
+  // Fetch all comments
+  async GetAllComments() {
+    let response = await Service.get("/comments");
+    return response.data.feed;
   },
-  
-    async Register(userData) {
-      let result = await Service.post("/users", {
-        email: userData.email,
-        password: userData.password,
-        firstName: userData.firstName,
-        lastName: userData.lastName,
-        profileType: userData.profileType,
-      });
-      console.log(result);
-      return result;
-    },
-  
-    logout() {
-      localStorage.removeItem("user");
-    },
-  
-    getUser() {
-      return JSON.parse(localStorage.getItem("user"));
-    },
-  
-    getToken() {
-      let user = Auth.getUser();
-      if (user && user.token) {
-        return user.token;
-      } else {
+
+  // Fetch comments for a specific post by postId
+  async GetCommentsByPostId(postId) {
+    let response = await Service.get(`/comments/${postId}`);
+    return response.data.comments;
+  },
+  // Post a new comment
+  async PostComment(commentData) {
+    let response = await Service.post("/comments", commentData);
+    return response.data;
+  }
+};
+
+let Auth = {
+  async login(email, password) {
+    try {
+        let response = await Service.post("/auth", {
+            email: email,
+            password: password,
+        });
+
+        // Log the entire response for debugging
+        console.log('Full response data:', response.data);
+
+        let user = response.data;
+
+        // Check if the token and other user details are present
+        if (user.token && user.email && user.profileType) {
+            // Store user details in local storage
+            localStorage.setItem("user", JSON.stringify(user));
+
+            // Store user data in the store
+            store.currentUser = user.email;
+            store.profileType = user.profileType;
+
+            // Log the stored data for debugging
+            console.log("Logged in user:", store.currentUser);
+            console.log("User role:", store.profileType);
+
+            return true;
+        } else {
+            console.error("Incomplete user data:", user);
+            return false;
+        }
+    } catch (error) {
+        console.error("Error during login:", error);
         return false;
-      }
-    },
-  
-    authenticated() {
-      let user = Auth.getUser();
-      if (user && user.token) {
-        return true;
-      }
-      return false;
-    },
-  
-    state: {
-      get authenticated() {
-        return Auth.authenticated();
-      },
-    },
-  };
-  
+    }
+},
+
+async Register(userData) {
+  let result = await Service.post("/users", {
+    email: userData.email,
+    password: userData.password,
+    firstName: userData.firstName,
+    lastName: userData.lastName,
+    profileType: userData.profileType,
+  });
+  console.log(result);
+  return result;
+},
+
+logout() {
+  localStorage.removeItem("user");
+},
+
+getUser() {
+  return JSON.parse(localStorage.getItem("user"));
+},
+
+getToken() {
+  let user = Auth.getUser();
+  if (user && user.token) {
+    return user.token;
+  } else {
+    return false;
+  }
+},
+
+authenticated() {
+  let user = Auth.getUser();
+  if (user && user.token) {
+    return true;
+  }
+  return false;
+},
+
+state: {
+  get authenticated() {
+    return Auth.authenticated();
+  },
+},
+};
+
 export { Service, Auth, Posts, Users, Comments };
