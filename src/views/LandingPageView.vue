@@ -44,9 +44,9 @@
             </v-row>
 
             <br /><br />
-            <p>Featured teacher post</p>
+            <!--  <p>Featured teacher post</p> -->
 
-            <v-card
+            <!-- <v-card
               :to="'/post'"
               exact
               tile
@@ -85,7 +85,7 @@
                   <v-card-subtitle>Jane Smith</v-card-subtitle>
                 </div>
               </div>
-            </v-card>
+            </v-card> -->
             <br />
             <v-col md="12" xs="6">
               <div class="text-center">

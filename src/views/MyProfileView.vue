@@ -7,7 +7,7 @@
       <div class="d-flex flex-row bg-surface-variant">
         <v-sheet class="ma-2 transparent-sheet">
           <v-avatar class="ma-4" size="50">
-            <v-img src="../assets/User.jpg"></v-img>
+            <v-img :src="User"></v-img>
           </v-avatar>
         </v-sheet>
         <v-sheet class="transparent-sheet">
@@ -64,6 +64,7 @@ export default {
       post: null,
       email: store.currentUser,
       cards: [],
+      User: require("@/assets/User.jpg"),
     };
   },
   components: {

@@ -28,11 +28,6 @@
             info.text.substring(0, 150) + (info.text.length > 150 ? "..." : "")
           }}<span style="color: #216ee1"> Read more</span>
         </v-card-text>
-        <!-- <a href="/profile">
-                    <v-avatar class="ma-1" size="50">
-                        <v-img src="../assets/User.jpg"> </v-img>
-                    </v-avatar>
-                </a> -->
         <v-card-subtitle>{{ info.email }}</v-card-subtitle>
         <v-card-subtitle>{{ postedFromNow }}</v-card-subtitle>
         <!-- Delete Button -->
@@ -52,7 +47,7 @@
 <script>
 import moment from "moment";
 import store from "@/store";
-import { Posts } from "@/services";
+import { Posts, Users } from "@/services";
 
 export default {
   name: "PostCard",
@@ -61,6 +56,7 @@ export default {
     return {
       imageUrl: "path-to-your-image.jpg",
       isSmallScreen: false,
+      userProfileType: null,
     };
   },
   props: ["info"],
@@ -74,6 +70,14 @@ export default {
     },
   },
   methods: {
+    async fetchUserProfileType() {
+      try {
+        const response = await Users.GetUserProfileType(this.info.email);
+        this.userProfileType = response.profileType;
+      } catch (error) {
+        console.error("Error fetching user profile type:", error);
+      }
+    },
     checkScreenSize() {
       this.isSmallScreen = this.$vuetify.breakpoint.smAndDown;
     },
@@ -116,12 +120,25 @@ export default {
             params: { postId: this.info.id },
           });
         }
+      } else {
+        if (this.userProfileType === "Teacher") {
+          this.$router.push({
+            name: "post-view",
+            params: { postId: this.info.id },
+          });
+        } else {
+          this.$router.push({
+            name: "student-post-view",
+            params: { postId: this.info.id },
+          });
+        }
       }
     },
   },
-  mounted() {
+  async mounted() {
     this.checkScreenSize();
     window.addEventListener("resize", this.checkScreenSize);
+    await this.fetchUserProfileType(); // Fetch the profile type on mount
   },
   beforeDestroy() {
     window.removeEventListener("resize", this.checkScreenSize);

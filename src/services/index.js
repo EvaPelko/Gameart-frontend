@@ -6,16 +6,8 @@ const Service = axios.create({
     baseURL: 'http://localhost:3000', // Your backend URL
     timeout: 1000,
 });
-// Service.interceptors.request.use((request) => {
-//   let token = Auth.getToken();
-//   if (!token) {
-//     $router.go();
-//     return;
-//   } else {
-//     request.headers["Authorization"] = "Bearer " + token;
-//   }
-//   return request;
-// });
+
+
 Service.interceptors.response.use(
   (response) => {
     return response;
@@ -56,6 +48,18 @@ let Users = {
         lastName: user.LastName,
         profileType: user.ProfileType,
       };
+    },
+
+    async GetUserProfileType(email) {
+      try {
+        const response = await axios.get(`http://localhost:3000/user/profile-type`, {
+          params: { email },
+        });
+        return response.data;
+      } catch (error) {
+        console.error("Error fetching user profile type:", error);
+        throw error;
+      }
     },
   };
 

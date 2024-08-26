@@ -10,7 +10,7 @@
             :to="{ name: 'profile-view', params: { userEmail: post.email } }"
           >
             <v-avatar class="ma-4" size="50">
-              <v-img src="../assets/User.jpg"></v-img>
+              <v-img :src="User"></v-img>
             </v-avatar> </router-link
         ></v-sheet>
         <v-sheet class="transparent-sheet">
@@ -132,6 +132,7 @@ export default {
       likeImage: require("@/assets/like.svg"), // Load like icon
       reportImage: require("@/assets/report.svg"), // Load report icon
       saveImage: require("@/assets/save.svg"), // Load save icon
+      User: require("@/assets/User.jpg"),
       likesCount: 0, // track number of likes
     };
   },
