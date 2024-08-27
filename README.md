@@ -48,3 +48,4 @@ Dodatne moguće funkcionalnosti:<br />
 - Sustav nagrada ili značka za aktivne korisnike koji sudjeluju u zajednici, ostavljaju komentare, lajkaju sadržaje i doprinose edukacijskim resursima.<br />
 
 ## Link na javni prototip
+https://gameart-frontend.netlify.app/
