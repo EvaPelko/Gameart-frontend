@@ -9,18 +9,47 @@
         <div id="div-color" max-width="800px" style="padding: 20px">
           <v-card-text>
             <v-form v-model="valid" ref="form">
-              <v-text-field v-model="newTitleText" label="Write a title" outlined dense class="post-input"
-                @keyup.enter="postTitle" :rules="[rules.required]"></v-text-field>
-              <v-textarea v-model="newPostText" label="Write text" outlined dense variant="filled"
-                :rules="[rules.required, rules.maxLength]" counter rows="8" max-height="160px"></v-textarea>
+              <v-text-field
+                v-model="newTitleText"
+                label="Write a title"
+                outlined
+                dense
+                class="post-input"
+                @keyup.enter="postTitle"
+                :rules="[rules.required]"
+              ></v-text-field>
+              <v-textarea
+                v-model="newPostText"
+                label="Write text"
+                outlined
+                dense
+                variant="filled"
+                :rules="[rules.required, rules.maxLength]"
+                counter
+                rows="8"
+                max-height="160px"
+              ></v-textarea>
             </v-form>
 
-            <croppa :width="400" :height="400" v-model="imageReference"></croppa>
+            <croppa
+              :width="400"
+              :height="400"
+              v-model="imageReference"
+            ></croppa>
 
-            <v-select label="Level of experience" v-model="experience"
-              :items="['Beginner', 'Intermediate', 'Advanced', 'Professional', 'Any']" variant="outlined"
-              :rules="[rules.required]"></v-select>
-
+            <v-select
+              label="Level of experience"
+              v-model="experience"
+              :items="[
+                'Beginner',
+                'Intermediate',
+                'Advanced',
+                'Professional',
+                'Any',
+              ]"
+              variant="outlined"
+              :rules="[rules.required]"
+            ></v-select>
           </v-card-text>
           <v-card-actions class="card-actions">
             <v-btn type="button" @click="post" color="#99CBDB" dark>Post</v-btn>
@@ -28,13 +57,11 @@
         </div>
       </v-card>
     </v-row>
-
-
   </v-container>
 </template>
 
 <script>
-import store from '../store';
+import store from "../store";
 /* import { db } from "../firebase";
 import { addDoc, collection } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"; */
@@ -43,18 +70,18 @@ import { Posts } from "@/services";
 export default {
   data() {
     return {
-      imageUrl: 'path-to-your-image.jpg',
+      imageUrl: "path-to-your-image.jpg",
       isSmallScreen: false,
-      newTitleText: '',
-      newPostText: '',
-      experience: '',
+      newTitleText: "",
+      newPostText: "",
+      experience: "",
       imageReference: null,
       valid: true,
       store,
       rules: {
-        required: v => !!v || "This field is required",
-        maxLength: v => (v && v.length <= 1000) || "Max 1000 characters",
-      }
+        required: (v) => !!v || "This field is required",
+        maxLength: (v) => (v && v.length <= 1000) || "Max 1000 characters",
+      },
     };
   },
   methods: {
@@ -62,44 +89,50 @@ export default {
       this.isSmallScreen = this.$vuetify.breakpoint.smAndDown; // Adjust breakpoint as needed
     },
     async post() {
-      console.log("running post...")
-        if (this.$refs.form.validate()) {
-            // Check if the user is logged in
-            if (!store.currentUser) {
-                alert('You need to be logged in to create a post.');
-                return;
+      console.log("running post...");
+      if (this.$refs.form.validate()) {
+        // Check if the user is logged in
+        if (!store.currentUser) {
+          alert("You need to be logged in to create a post.");
+          return;
+        }
+        console.log("user is logged in...");
+        // Convert the image to a Blob object and handle asynchronously
+        this.imageReference.generateBlob(async (blobData) => {
+          const postData = {
+            title: this.newTitleText,
+            text: this.newPostText,
+            email: store.currentUser,
+            userRole: store.profileType,
+          };
+          console.log("Blob data:", blobData);
+          console.log("Post data being sent:", postData);
+
+          try {
+            const response = await Posts.CreatePost(postData, blobData);
+
+            if (
+              response &&
+              response.message &&
+              (response.message === "Post saved to student-posts collection" ||
+                response.message === "Post saved to teacher-posts collection")
+            ) {
+              alert("Post created successfully!");
+              this.newTitleText = "";
+              this.newPostText = "";
+              this.imageReference.remove(); // Clear the image
+              this.$router.push("/"); // Redirect to home or any other page after successful post
+            } else {
+              console.error("Unexpected response structure:", response);
+              alert("There was an issue creating your post.");
             }
-            console.log("user is logged in...")
-            // Convert the image to a Blob object and handle asynchronously
-            this.imageReference.generateBlob(async (blobData) => {
-                const postData = {
-                    title: this.newTitleText,
-                    text: this.newPostText,
-                    email: store.currentUser,
-                    userRole: store.profileType,
-                };
-                console.log('Blob data:', blobData);
-                console.log('Post data being sent:', postData);
-
-                try {
-                    const response = await Posts.CreatePost(postData, blobData);
-
-                    if (response && (response.message === 'Post saved to student-posts collection' ||
-                        response.message === 'Post saved to teacher-posts collection')) {
-                        alert('Post created successfully!');
-                        this.newTitleText = "";
-                        this.newPostText = "";
-                        this.imageReference.remove(); // Clear the image
-                        this.$router.push('/'); // Redirect to home or any other page after successful post
-                    } else {
-                        alert('There was an issue creating your post.');
-                    }
-                } catch (error) {
-                    console.error('Error creating post:', error);
-                    alert('There was an error creating your post.');
-                }
-            });
-        }}
+          } catch (error) {
+            console.error("Error creating post:", error);
+            alert("There was an error creating your post.");
+          }
+        });
+      }
+    },
     /* post() {
       if (this.$refs.form.validate()) {
         this.imageReference.generateBlob((blobData) => {
@@ -168,17 +201,15 @@ export default {
   },
   mounted() {
     this.checkScreenSize();
-    window.addEventListener('resize', this.checkScreenSize);
+    window.addEventListener("resize", this.checkScreenSize);
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this.checkScreenSize);
+    window.removeEventListener("resize", this.checkScreenSize);
   },
   resizeTextarea() {
-    const textarea = this.$refs.textarea.$el.querySelector('textarea');
-    textarea.style.height = 'auto';
-    textarea.style.height = textarea.scrollHeight + 'px';
+    const textarea = this.$refs.textarea.$el.querySelector("textarea");
+    textarea.style.height = "auto";
+    textarea.style.height = textarea.scrollHeight + "px";
   },
-
 };
 </script>
-

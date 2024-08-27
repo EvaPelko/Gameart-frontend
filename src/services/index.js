@@ -83,11 +83,24 @@ let Posts = {
             },
         });
 
-        return response.data;
-    } catch (error) {
-        console.error('Error in CreatePost:', error.response || error.message || error);
-        throw error;
-    }
+        // Check if response is successful
+        if (response && response.status === 201) {
+          return response.data;
+      } else {
+          // Log the response for debugging
+          console.error("Unexpected response:", response);
+          throw new Error("Unexpected response status: " + response.status);
+      }
+
+  } catch (error) {
+      // Check if error.response exists to avoid reading property of undefined
+      if (error.response) {
+          console.error('Error in CreatePost:', error.response.status, error.response.data);
+      } else {
+          console.error('Error in CreatePost:', error.message || error);
+      }
+      throw error; // Re-throw error to handle it in the calling function
+  }
 },
 
 async DeletePost(postId) {
