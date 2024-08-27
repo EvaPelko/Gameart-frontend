@@ -127,7 +127,7 @@ export default {
               alert("There was an issue creating your post.");
             }
           } catch (error) {
-            console.error("Error creating post:", error);
+            console.error("Error creating post:", error.message || error);
             alert("There was an error creating your post.");
           }
         });

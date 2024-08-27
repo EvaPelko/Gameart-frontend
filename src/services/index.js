@@ -83,24 +83,30 @@ let Posts = {
             },
         });
 
-        // Check if response is successful
-        if (response && response.status === 201) {
-          return response.data;
+        
+      // Check if response is defined and status is 201
+      if (response && response.status === 201) {
+        return response.data;
       } else {
-          // Log the response for debugging
-          console.error("Unexpected response:", response);
-          throw new Error("Unexpected response status: " + response.status);
+        // Handle unexpected response status or undefined response
+        console.error("Unexpected response:", response);
+        throw new Error("Unexpected response: " + (response ? response.status : 'undefined response'));
       }
-
-  } catch (error) {
-      // Check if error.response exists to avoid reading property of undefined
+    } catch (error) {
+      // Enhanced error handling to manage different scenarios
       if (error.response) {
-          console.error('Error in CreatePost:', error.response.status, error.response.data);
+        // Server responded with a status other than 2xx
+        console.error('Error in CreatePost:', error.response.status, error.response.data);
+        throw error;
+      } else if (error.request) {
+        // Request was made, but no response was received
+        console.error('No response received:', error.request);
+        throw new Error('No response received from the server.');
       } else {
-          console.error('Error in CreatePost:', error.message || error);
-      }
-      throw error; // Re-throw error to handle it in the calling function
-  }
+        // Something happened in setting up the request
+        console.error('Error in setting up request:', error.message || error);
+        throw error;
+      }}
 },
 
 async DeletePost(postId) {
