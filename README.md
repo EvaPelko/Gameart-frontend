@@ -33,7 +33,7 @@ Društvena mreža je podijeljena na dvije sekcije: edukacijski dio i učenički 
 
 ### Sljedeće funkcionalnosti su nadogradnja i poboljšanje u sklopu kolegija Web aplikacije:
 
-- **Prijenos backenda s Firebase u MongoDB.** Prijenos backenda s Firebasea na MongoDB omogućio je veću fleksibilnost u modeliranju podataka, bolju skalabilnost i naprednije mogućnosti upita, čime se unaprijedila ukupna funkcionalnost i učinkovitost web aplikacije. Također, migracija je pružila veću kontrolu nad podacima i omogućila ekonomičnija rješenja za skaliranje. <br />
+- **Prijenos baze podataka s Firebase u MongoDB.** Prijenos baze podataka s Firebasea na MongoDB omogućio je veću fleksibilnost u modeliranju podataka, bolju skalabilnost i naprednije mogućnosti upita, čime se unaprijedila ukupna funkcionalnost i učinkovitost web aplikacije. Također, migracija je pružila veću kontrolu nad podacima i omogućila ekonomičnija rješenja za skaliranje. <br />
 - **Pretraživanje.** Dodatak funkcionalnosti pretraživanja omogućuje korisnicima brže i jednostavnije pronalaženje specifičnih sadržaja ili korisnika unutar aplikacije, čime se poboljšava korisničko iskustvo i efikasnost korištenja. Ova značajka također pomaže u organizaciji i dostupnosti informacija, što aplikaciju čini korisnijom i intuitivnijom. <br />
 - **Unapređenje profila korisnika.** Nova verzija aplikacije omogućila je pregled svih objava od određenog korisnika na njihovom profilu. <br />
 - **Brisanje vlastitih objava.** Korisnik na vlastitom profilu ima pregled svojih objava i mogućnost brisanja neželjenog sadržaja. <br />
