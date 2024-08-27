@@ -66,24 +66,26 @@ let Posts = {
   // Create a new post
   async CreatePost(postData, imageBlob) {
     try {
-        let formData = new FormData();
-        formData.append("title", postData.title);
-        formData.append("text", postData.text);
-        formData.append("email", postData.email);
-        formData.append("userRole", postData.userRole);
-        
-        // Append the image with the expected field name
-        if (imageBlob) {
-            formData.append("image", imageBlob, "post_image.png");
-        }
+      let formData = new FormData();
+      formData.append("title", postData.title);
+      formData.append("text", postData.text);
+      formData.append("email", postData.email);
+      formData.append("userRole", postData.userRole);
 
-        let response = await Service.post("/posts", formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        });
+      // Append the image with the expected field name
+      if (imageBlob) {
+        formData.append("image", imageBlob, "post_image.png");
+      }
 
-        
+      // Introduce delay for debugging
+      await new Promise(resolve => setTimeout(resolve, 1000)); // 1-second delay
+
+      let response = await Service.post("/posts", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
       // Check if response is defined and status is 201
       if (response && response.status === 201) {
         return response.data;
@@ -106,8 +108,9 @@ let Posts = {
         // Something happened in setting up the request
         console.error('Error in setting up request:', error.message || error);
         throw error;
-      }}
-},
+      }
+    }
+  },
 
 async DeletePost(postId) {
   if (store.profileType == "Student"){
