@@ -12,7 +12,7 @@
       <div>
         <v-responsive class="ma-4">
           <v-img
-            :src="info.url"
+            :src="constructImageUrl(info.url)"
             alt="Responsive Image"
             class="mx-auto"
             max-width="320px"
@@ -70,6 +70,22 @@ export default {
     },
   },
   methods: {
+    constructImageUrl(relativeUrl) {
+      // Log the relativeUrl to debug where it might be coming from
+      console.log("Relative URL:", relativeUrl);
+
+      if (relativeUrl.startsWith("http://localhost:3000")) {
+        relativeUrl = relativeUrl.replace("http://localhost:3000", "");
+      }
+
+      if (relativeUrl.startsWith("http")) {
+        return relativeUrl; // Already an absolute URL
+      }
+
+      const fullUrl = `https://gameart-backend-production.up.railway.app${relativeUrl}`;
+      console.log("Constructed Image URL:", fullUrl); // Debugging log
+      return fullUrl;
+    },
     async fetchUserProfileType() {
       try {
         const response = await Users.GetUserProfileType(this.info.email);

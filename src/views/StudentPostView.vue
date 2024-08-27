@@ -20,14 +20,15 @@
 
       <p class="text-left roboto-font mx-10">{{ post.text }}</p>
       <v-img
+        v-if="post.url"
         :src="post.url"
         alt="Responsive Image"
         class="mx-auto"
         max-width="320px"
         @click="showFullSize"
-      ></v-img>
+      />
       <v-dialog v-model="dialog" max-width="800px">
-        <v-img :src="post.url" contain></v-img>
+        <v-img v-if="post.url" :src="post.url" contain></v-img>
       </v-dialog>
       <br />
     </div>
@@ -136,14 +137,39 @@ export default {
   },
 
   methods: {
+    constructImageUrl(relativeUrl) {
+      // Log the relativeUrl to debug where it might be coming from
+      console.log("Relative URL:", relativeUrl);
+
+      // Check and replace localhost URL with an empty string
+      if (relativeUrl.startsWith("http://localhost:3000")) {
+        relativeUrl = relativeUrl.replace("http://localhost:3000", "");
+      }
+
+      // If it's already a full URL, return it as is
+      if (relativeUrl.startsWith("http")) {
+        return relativeUrl;
+      }
+
+      // Prepend the production backend URL to the relative URL
+      const fullUrl = `https://gameart-backend-production.up.railway.app${relativeUrl}`;
+      console.log("Constructed Image URL:", fullUrl); // Debugging log
+      return fullUrl;
+    },
+
     async fetchPostData(postId) {
       try {
         const response = await Posts.GetStudentPost(postId);
 
-        // Prepend the backend URL to the image path
+        // Check if response has a url and use constructImageUrl if it does
+        const imageUrl = response.url
+          ? this.constructImageUrl(response.url)
+          : null;
+
+        // Assign the modified URL to the post object
         this.post = {
           ...response,
-          url: `http://localhost:3000${response.url}`,
+          url: imageUrl, // Will be null if no image URL is available
         };
 
         // Initialize likesCount and isLiked state
@@ -252,7 +278,9 @@ export default {
           }
         } else {
           console.error("Error reporting post:", error);
-          alert("There was an error reporting the post.");
+          alert(
+            "There was an error reporting the post. You might have already reported this post."
+          );
         }
       }
     },
